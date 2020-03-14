@@ -1,0 +1,9 @@
+{% if employee_list %}
+<ul>
+    {% for employee in employee_list %}
+    <li><a href="/assessment/{{ employee.id }}/">{{ employee.e_name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No data is available.</p>
+{% endif %}

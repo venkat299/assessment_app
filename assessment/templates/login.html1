@@ -1,0 +1,52 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+{% load static %}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<style type="text/css">
+
+/* CSS used here will be applied after bootstrap.css */
+   body { 
+ background: url('/assets/example/bg_suburb.jpg') no-repeat center center fixed; 
+ -webkit-background-size: cover;
+ -moz-background-size: cover;
+ -o-background-size: cover;
+ background-size: cover;
+}
+
+.panel-default {
+ opacity: 0.7;
+ margin-top:30px;
+}
+.form-group.last {
+ margin-bottom:0px;
+}
+ 
+</style>
+
+{% block content %}
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Login</h3>
+      </div>
+      <div class="panel-body">
+
+
+  <h2>Login</h2>
+{% if next %}
+<form action="/login/?next={{next}}" method="post" >
+{%else%}
+<form action="/login/" method="post" >
+{% endif %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+
+
+      </div>
+    </div>
+{% endblock %}
+

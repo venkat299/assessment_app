@@ -1,0 +1,9 @@
+<!--<form action="{{success_url}}?next={{next}}" method="post">{% csrf_token %}-->
+<!--    <p>Are you sure you want to delete "{{ object }}"?</p>-->
+<!--    <input type="submit" value="Confirm" />-->
+<!--</form>-->
+
+<form method="post" target="">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm"/>
+</form>

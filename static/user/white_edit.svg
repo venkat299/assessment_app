@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+
+    <g>
+        <title>background</title>
+        <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+    </g>
+    <g>
+        <title>Layer 1</title>
+        <rect id="svg_1" width="32" height="32" fill="none"/>
+        <polygon fill="#ffffff" id="svg_2" points="10 28 4 28 4 22"/>
+        <rect fill="#ffffff" id="svg_3" y="8.757" x="4.858" width="28.284"
+              transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 41.6274 8.7574)" height="8.485"/>
+        <polygon fill="#ffffff" id="svg_4" points="4 32 4 30 26 30 26 32 4 32"/>
+    </g>
+</svg>

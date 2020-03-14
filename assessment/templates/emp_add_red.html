@@ -1,0 +1,46 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+
+{% include 'base.html' with active_tab='tab5' %}
+{% load static %}
+<script src="{% static 'user/datatable.js' %}"></script>
+
+{% load django_tables2 crispy_forms_tags %}
+
+<!-- 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+ -->
+<link href="{% static 'user/user.css' %}" rel="stylesheet"/>
+Addition
+<div class=".wrapper">
+
+    {% render_table table1 %}
+</div>
+
+
+Reduction
+<div class=".wrapper">
+    {% render_table table2 %}
+</div>
+
+
+<style type="text/css">
+
+</style>
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+var $table = $('table');
+$table.floatThead({
+    scrollContainer: function($table){
+        return $table.closest('.wrapper');
+    },
+    position: 'absolute'
+});
+})
+
+
+
+
+</script>

@@ -1,0 +1,158 @@
+{% include 'base.html' with active_tab='tab3' %}
+{% load static %}
+<title>Employee List</title>
+<!-- <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" /> -->
+
+<script src="{% static 'user/datatable.js' %}"></script>
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+ -->
+<link href="{% static 'user/user.css' %}" rel="stylesheet"/>
+<!-- {% load django_tables2 crispy_forms_tags %}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %} -->
+
+
+{% block content %}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <!--         <h3 class="panel-title">Filter <span> Total Rows: </span></h3>  -->
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col-xs-4 bold p_header">Filter</div>
+            <div class="col-xs-8">
+                <div class="row">
+                    <div class="col-md-4 col-md-push-8  bold p_header">Total Rows : {{ total_rows }}</div>
+                    <!--         <div class="col-md-8 col-md-pull-4">Content</div> -->
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+
+    </div>
+    <div class="panel-body">
+        {% crispy filter.form filter.form.helper %}
+
+    </div>
+</div>
+{% for format in table.export_formats %}
+<a href="{% querystring '_export'=format %}">
+    download <code>.{{ format }}</code>
+</a>
+{% endfor %}
+<div class=".wrapper">
+    {% render_table table %}
+
+</div>
+
+
+{% endblock %}
+<style type="text/css">
+/*   th {
+    background: black !important;
+    border-left:0px !important;
+
+  }
+   th > a {
+    color: white !important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+  }*/
+
+.iconFriends, .convert_link,.edit_icon_16,.transfer_icon_16,.promote_icon_16,.terminate_icon_16{
+   width: 16px;
+   height: 16px;
+   /*border: none;*/
+   display:inline-block;
+}
+.edit_icon_16{
+  background: url({% static 'user/edit_16.png' %}) no-repeat;
+     display:inline-block;
+}
+.transfer_icon_16{
+  background: url({% static 'user/transfer_16.png' %}) no-repeat;
+     display:inline-block;
+}
+.promote_icon_16{
+  background: url({% static 'user/promote_16.png' %}) no-repeat;
+     display:inline-block;
+}
+.terminate_icon_16{
+  background: url({% static 'user/delete_16.png' %}) no-repeat;
+     display:inline-block;
+}
+
+span,.name{
+  /*color: #6cf25d !important;*/
+  color:#6dff05 !important;
+  /*font-weight: bold ;*/
+}
+
+
+
+
+
+</style>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+    $('.fixed_headers').DataTable({
+         paging: false,
+         // scrollY: 400,
+         searching: false,
+         ordering:  false,
+         select: true,
+          fixedHeader: {
+        header: true,
+        footer: true
+    },
+     scroller:    true,
+         fixedColumns: {
+        leftColumns: 2
+    }
+    });
+});
+
+    $(function() {
+        // $('.convert_link').attr( 'next',(location.pathname+location.search));
+        // href_var = ($('.convert_link')[0]).href
+        // $('.convert_link').attr( 'href',href_var+'?&next='+encodeURIComponent(location.pathname+location.search));
+
+              $('.convert_link').toArray().forEach(function (item) {
+          //console.log(item)
+          item.setAttribute( 'href',item.href+'?&next='+encodeURIComponent(location.pathname+location.search))
+        })
+        //x.href+'?&next='+location.pathname+location.search
+
+        //next={{request.path}}
+        // (location.pathname+location.search).substr(1)
+
+    });
+
+$(document).ready(function(){
+var $table = $('table');
+$table.floatThead({
+    scrollContainer: function($table){
+        return $table.closest('.wrapper');
+    },
+    position: 'absolute'
+});
+
+
+})
+
+
+
+// $(function() {
+//     $('#id_e_unit_roll').select2();
+//     $('#id_e_unit_work').select2();
+//     $('#id_e_desg').select2();
+// });
+
+
+
+
+</script>
+

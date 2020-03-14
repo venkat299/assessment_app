@@ -1,0 +1,218 @@
+{% include 'base.html' with active_tab='tab6' %}
+{% load static %}
+{% csrf_token %}
+<title>Upload</title>
+<!-- tabulator -css files -->
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.0.0/css/tabulator.min.css" rel="stylesheet">-->
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.0.0/css/semantic-ui/tabulator_semantic-ui.min.css" rel="stylesheet">-->
+
+<link href=" {% static 'semantic/dist/semantic.min.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'user/user.css' %}" rel="stylesheet"/>
+
+<!--<script crossorigin="anonymous" type="text/javascript"-->
+<!--        src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.0.0/js/tabulator.min.js"></script>-->
+<script src="{% static 'semantic/dist/semantic.min.js' %}"></script>
+<script src="{% static 'tabulator/js/tabulator.min.js' %}"></script>
+<script src="{% static 'tabulator/js/jquery_wrapper.min.js' %}"></script>
+<script src="{% static 'js/download.js' %}"></script>
+
+<style>
+  .ui.checkbox input[type="checkbox"]{
+    margin-left: 0px !important;
+}
+
+
+</style>
+
+{% block content %}
+
+<div class="ui equal width grid">
+    <div class="four wide column">
+        <div class="ui segment">
+            <div class="ui vertical fluid menu">
+                <form action="{% url 'upload_req'%}" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div class="header h3 item">
+                        Stage II Upload (Req, San)
+                    </div>
+                    <div class="h5 item">
+                        <div class="h5">Column Order</div>
+                        <br> ID, CADRE, DSCD, DESIG, GRADE, TOT, REQ, SAN, COMMENTS
+                    </div>
+                    <div class="item">
+                        <input class="ui segment" id="uploadbutton" name="file" type="file" value="Browse"/>
+                    </div>
+                    <div class="item">
+                        <input class="ui button" type="submit" value="Upload"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="four wide column">
+        <div class="ui segment ">
+            <div class="ui vertical fluid menu">
+                <form action="{% url 'upload_ext'%}" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div class="header h3 item">
+                        Stage I Upload (Employee list)
+                    </div>
+                    <div class="h5 item">
+                        <div class="h5"> Column Order (First 5 rows will be ignored)</div>
+                        <br> AREA, UNIT, MINE_TYPE, ONROLL_UNIT,
+                        <br> WORKING UNIT, SECTION_TYPE, CADRE,
+                        <br> SECTION, SECTION_CD, DESIG, GRADE,
+                        <br> DSCD, EIS, NAME, GENDER, DOR, Comments
+                        <br>
+                    </div>
+                    <div class="item">
+                        <div class="ui labeled input">
+                            <div class="ui label">
+                                Sheet name
+                            </div>
+                            <input name="sheet_name" placeholder="" type="text">
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ui checkbox">
+                            <input name="ignore_multiple_unit" type="checkbox" value="on">
+                            <input name="ignore_multiple_unit" type="hidden" value="off">
+                            <label>File contains multiple units</label>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <input class="ui button" id="uploadbutton" name="file" type="file" value="Browse"/>
+                    </div>
+                    <div class="item">
+                        <input class="ui button" type="submit" value="Upload"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="ui segment "> <!-- hidden -->
+            <div class="ui vertical fluid menu">
+                <form action="{% url 'bulk_delete_unit'%}" enctype="multipart/form-data" id="delete_form" method="post">
+                    {% csrf_token %}
+                    <div class="header h3 item">
+                        Delete Sanc/ Ext
+                    </div>
+                    <div class="item">
+                        <div class="ui basic compact" id="combo_div">
+                            <select class="ui search selection dropdown" id="unit_select" name="unit_select">
+                                {% if unit_list %}
+                                {% for unit in unit_list %}
+                                <option value='{{ unit.u_id }}'><b>{{ unit.u_area__a_name }}</b> - {{ unit.u_name }}
+                                </option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <select class="ui selection dropdown" id="table_select" name="table_select">
+                            <option value='employee'><b>Employee Table</b></option>
+                            <option value='sanction'><b>Sanction Table</b></option>
+                        </select>
+                    </div>
+                    <div class="item">
+                        <input class="ui button" id="delete_button" type="submit" value="submit"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="ui basic modal">
+    <div class="ui icon header">
+        <i class="submit icon"></i>
+        Confirm
+    </div>
+    <div class="actions">
+        <div class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+            No
+        </div>
+        <div class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            Yes
+        </div>
+    </div>
+</div>
+
+{% if display %}
+
+
+<div class="ui {{ status }} message">
+    <i class="close icon"></i>
+    <div class="header">
+        {{ status }}
+    </div>
+    <ul class="list">
+        {% for msg in response_msg %}
+        <li>{{ msg }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% endif %}
+
+
+{% endblock %}
+
+<script>
+
+$(function() {
+
+  $('.ui.dropdown')
+  .dropdown()
+
+  // $('.ui.modal')
+  // .modal('attach events', '#delete_button', 'submit')
+
+  var confirmed = false;
+  $("#delete_form").on("submit", function(e){
+
+  // if confirm == true here
+  // And if the form is valid...
+
+  // the event won't be prevented and the confirm won't show.
+  if(!confirmed){
+    e.preventDefault();
+
+    $('.ui.modal')
+  .modal({
+    closable  : false,
+    onDeny    : function(){
+      // window.alert('Wait not yet!');
+      return false;
+    },
+    onApprove : function() {
+      confirmed = true;
+      $("#delete_form").submit();
+    }
+  }).modal('show')
+
+    // $.confirm({
+    //   title: 'Confirm!',
+    //   content: 'Are you sure?',
+    //   buttons: {
+    //     No: function () {
+    //       return;
+    //     },
+    //     Yes: function () {
+    //       confirmed = true;
+    //       $("#delete_form").submit();
+    //     }
+    //   }
+    // });
+  }
+});
+});
+
+
+</script>

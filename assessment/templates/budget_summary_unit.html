@@ -1,0 +1,67 @@
+{% include 'base.html' with active_tab='tab1' %}
+{% load static %}
+{% csrf_token %}
+
+<title>Budget Summary</title>
+
+<!-- tabulator -css files -->
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.0.0/css/tabulator.min.css" rel="stylesheet">-->
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.0.0/css/semantic-ui/tabulator_semantic-ui.min.css" rel="stylesheet">-->
+<link href="{% static 'tabulator/css/tabulator.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'tabulator/css/bulma/tabulator_bulma.min.css' %}" rel="stylesheet"/>
+
+<!--/dist/css/bulma/tabulator_bulma.min.css-->
+<link href=" {% static 'semantic/dist/semantic.min.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'user/user.css' %}" rel="stylesheet"/>
+
+
+<!--<script crossorigin="anonymous" type="text/javascript"-->
+<!--        src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.0.0/js/tabulator.min.js"></script>-->
+<script src="{% static 'semantic/dist/semantic.min.js' %}"></script>
+<script src="{% static 'tabulator/js/tabulator.min.js' %}"></script>
+<script src="{% static 'tabulator/js/jquery_wrapper.min.js' %}"></script>
+
+
+<div class="my_container">
+    <div class="fixed ui segment "><h2 class="ui header">Areawise</h2>
+        <div id="area_summary_table"></div>
+    </div>
+    <div class="flex-item ui segment"><h2 class="ui header">Unitwise</h2>
+        <div id="unit_summary_table"></div>
+    </div>
+</div>
+
+<script src="{% static 'js/budget_summary_unit.js' %}"></script>
+<script>
+$(function() {
+    var unit_summary = []
+    {% if unit_summary %}
+    unit_summary = {{unit_summary|safe}};
+    {% endif %}
+
+    var area_summary = []
+    {% if area_summary %}
+    area_summary = {{area_summary|safe}};
+    {% endif %}
+
+    on_page_load(area_summary, unit_summary)
+});
+
+
+</script>
+
+<style>
+.my_container{
+    display: flex;
+}
+.fixed{
+    width: 550px;
+}
+.flex-item{
+    flex-grow: 1;
+    margin:0 !important;
+}
+
+
+</style>
+

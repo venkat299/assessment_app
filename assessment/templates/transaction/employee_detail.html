@@ -1,0 +1,115 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+
+
+{% include 'base.html' with active_tab='tab2' %}
+
+{% load static %}
+{% load django_tables2 crispy_forms_tags %}
+<link href="{% static 'user/user.css' %}" rel="stylesheet"/>
+<script src="{% static 'user/datatable.js' %}"></script>
+<body>
+{% block content %}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title p_header">Employee Details</h3>
+    </div>
+    <div class="panel-body">
+
+        <div class=" col-md-9 col-lg-9 ">
+            <table class="table table-user-information">
+                <tbody>
+                <tr>
+                    <td class="requiredField">Name:</td>
+                    <td class="">{{emp.e_name}}</td>
+                    <td class="requiredField">Designation:</td>
+                    <td class="">{{emp.e_desg.d_code}} - {{emp.e_desg.d_name}} - {{emp.e_desg.d_grade}}</td>
+                    <td class="requiredField">Discipline:</td>
+                    <td class="">{{emp.e_desg.d_discp}}</td>
+                </tr>
+                <tr>
+                    <td class="requiredField">Eis No:</td>
+                    <td class="">{{emp.e_eis}}</td>
+                    <td class="requiredField">Token No:</td>
+                    <td class="">{{emp.e_regsno}}</td>
+                    <td class="requiredField">Age:</td>
+                    <td class="">{{emp.e_regsno}}</td>
+                </tr>
+                <tr>
+                    <td class="requiredField">Date of Birth</td>
+                    <td class="">{{emp.dob}}</td>
+                    <td class="requiredField">Join date:</td>
+                    <td class="">{{emp.doj}}</td>
+                    <td class="requiredField">Termination date:</td>
+                    <td class="">{{emp.dot}}</td>
+                </tr>
+
+                <tr>
+                <tr>
+                    <td class="requiredField">Gender</td>
+                    <td class="">{{emp.e_gend}}</td>
+                    <td class="requiredField">Join Type</td>
+                    <td class="">{{emp.e_join}}</td>
+                    <td class="requiredField">Termi. Type</td>
+                    <td class="">{{emp.e_termi}}</td>
+                </tr>
+                <tr>
+                    <td class="requiredField">Curr Area:</td>
+                    <td class="">{{emp.e_unit_roll.u_area.a_name}}</td>
+                    <td class="requiredField">Curr Unit:</td>
+                    <td class="">{{emp.e_unit_roll.u_name}}</td>
+                    <td class="requiredField">Curr Working Unit</td>
+                    <td class="">{{emp.e_unit_work.u_name}}</td>
+                </tr>
+                <!-- <tr>
+                  <td>Email</td>
+                  <td><a href="mailto:info@support.com">info@support.com</a></td>
+                </tr>
+                  <td>Phone Number</td>
+                  <td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)
+                  </td>
+
+                </tr> -->
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<div class="panel-heading">
+    <h3 class="panel-title p_header">Promotion Details</h3>
+</div>
+
+<div class=".wrapper">
+    {% render_table promotion_table %}
+</div>
+<div class="panel-heading">
+    <h3 class="panel-title p_header">Transfer Details</h3>
+</div>
+<div class=".wrapper">
+    {% render_table transfer_table %}
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+var $table = $('table');
+$table.floatThead({
+    scrollContainer: function($table){
+        return $table.closest('.wrapper');
+    },
+    position: 'absolute'
+});
+})
+
+
+
+
+</script>
