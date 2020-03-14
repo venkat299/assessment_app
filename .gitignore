@@ -5,3 +5,7 @@
 /db (another copy).sqlite3
 /db (copy).sqlite3
 /.vscode/
+
+
+/admin/
+/vendor/
