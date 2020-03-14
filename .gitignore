@@ -1,0 +1,7 @@
+*._.DS_Store
+/venv/
+
+/db.sqlite3
+/db (another copy).sqlite3
+/db (copy).sqlite3
+/.vscode/
