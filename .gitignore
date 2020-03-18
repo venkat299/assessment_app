@@ -1,4 +1,7 @@
 *._.DS_Store
+*.pyc
+*.xls
+
 /venv/
 
 /db.sqlite3
@@ -11,3 +14,4 @@
 /vendor/
 /.idea/
 /admin/
+
