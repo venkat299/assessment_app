@@ -36,8 +36,16 @@
                         Stage II Upload (Req, San)
                     </div>
                     <div class="h5 item">
-                        <div class="h5">Column Order</div>
+                        <div class="ui h5">Column Order</div>
                         <br> ID, CADRE, DSCD, DESIG, GRADE, TOT, REQ, SAN, COMMENTS
+                    </div>
+                    <div class="item">
+                        <div class="h5">Choose column to upload</div>
+                        <select class="ui selection dropdown" id="sanction_column_sel" name="column_select">
+                            <option selected="selected" value='s+r'><b>Sanction + Requirement</b></option>
+                            <option value='s'><b>Sanction Column</b></option>
+                            <option value='r'><b>Requirement Column</b></option>
+                        </select>
                     </div>
                     <div class="item">
                         <input class="ui segment" id="uploadbutton" name="file" type="file" value="Browse"/>
@@ -81,7 +89,7 @@
                         </div>
                     </div>
                     <div class="item">
-                        <input class="ui button" id="uploadbutton" name="file" type="file" value="Browse"/>
+                        <input class="ui button" name="file" type="file" value="Browse"/>
                     </div>
                     <div class="item">
                         <input class="ui button" type="submit" value="Upload"/>

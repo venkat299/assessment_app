@@ -173,8 +173,8 @@ class Sanction(models.Model):
     sn_id = models.CharField(primary_key=True, null=False, max_length=24)
     sn_dscd = models.ForeignKey(Desg, on_delete=models.CASCADE)
     sn_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-    sn_req = models.IntegerField()
-    sn_san = models.IntegerField()
+    sn_req = models.IntegerField(default=0)
+    sn_san = models.IntegerField(default=0)
     sn_comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)
 
     def __str__(self):

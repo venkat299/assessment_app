@@ -82,7 +82,7 @@ def sum_acc_sanc(result, row):
         return result + 0
 
 
-def upload_stage_2(content, extension, u_code, year):
+def upload_stage_2(content, extension, u_code, year, column_upload):
     response_message = []
 
     unit_ls = Unit.objects.values_list('u_code', flat=True)
@@ -147,6 +147,7 @@ def upload_stage_2(content, extension, u_code, year):
         response_message.append('{0} rows will be inserted'.format(length))
 
         ls = []
+        ls_alt = []
         for idx, r in enumerate(filtered_rec):
             # unit, dscd, req, sanc remark
             # sno	AREA	UNIT	MINE_TYPE	ONROLL_UNIT	WORKING UNIT	SECTION_TYPE	CADRE	SECTION	SECTION_CD	DESIG	DSCD	EIS	NAME	GENDER	DOB	Comments
@@ -165,20 +166,50 @@ def upload_stage_2(content, extension, u_code, year):
                                sn_req=req_val,
                                sn_san=san_val,
                                sn_comment=r[comment_column]))
+
+            sn_obj = {'sn_id': year + "_" + u_code + "_" + year + "_" + r[dscd_column],
+                      'sn_unit_id': year + "_" + u_code,
+                      'sn_dscd_id': year + "_" + r[dscd_column],
+                      'sn_comment': r[comment_column]}
+
+            if column_upload == 'r':
+                sn_obj['sn_req'] = req_val
+            if column_upload == 's':
+                sn_obj['sn_san'] = san_val
+
+            ls_alt.append(sn_obj)
+
         # c = conn.cursor()
         # #print(ls)
         # c.execute('delete from sanc where unit = ?',(unit_code,))
         # print('deleting rows for unit : {0}'.format(unit_code))
         # c.executemany('''insert into sanc (unit, dscd, req, san, remark) values(?,?,?,?,?)''',ls)
         # conn.commit()
-        Sanction.objects.filter(sn_unit_id=year + '_' + u_code).delete()
-        batch_size = len(ls)
-        if batch_size <= 0:
-            response_message.append("no data found")
-            return 'error', response_message
-        Sanction.objects.bulk_create(ls, batch_size)
+        if column_upload == "s+r":
+            Sanction.objects.filter(sn_unit_id=year + '_' + u_code).delete()
+            batch_size = len(ls)
+            if batch_size <= 0:
+                response_message.append("no data found")
+                return 'error', response_message
+            Sanction.objects.bulk_create(ls, batch_size)
+            response_message.append('--->{0} records inserted sucessfully'.format(len(ls)))
 
-        response_message.append('--->{0} records inserted sucessfully'.format(len(ls)))
+        if column_upload != "s+r":
+            created_count = 0
+            updated_count = 0
+
+            for item in ls_alt:
+                sanction, created = Sanction.objects.update_or_create(sn_id=item['sn_id'], defaults=item)
+                sanction.save()
+                if created:
+                    created_count = created_count + 1
+                else:
+                    updated_count = updated_count + 1
+
+            response_message.append(
+                '--->{0} records added and  {1} records updated sucessfully'.format(created_count, updated_count))
+
+        
 
     return "success", response_message
 

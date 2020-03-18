@@ -2,7 +2,6 @@
 import json
 
 from dal import autocomplete
-from django.contrib.auth.decorators import user_passes_test
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import connection
 from django.db.models import Sum, FloatField
@@ -38,7 +37,7 @@ def index(request):
     return render(request, 'base.html')
 
 
-@user_passes_test(in_ied_execs_grp)
+# @user_passes_test(in_ied_execs_grp)
 def upload_files(request):
     unit_ls = Unit.objects.values('u_id', 'u_name', 'u_type', 'u_area__a_name')
     context = {'display': False, 'unit_list': unit_ls}
@@ -55,11 +54,12 @@ def upload_req(request):
             filename = file.name
             u_code = filename.split(".")[0]
             content = file.read()
+            column_upload = request.POST['column_select']
             # print(content)
             # u_code = "U08SAR"
             if filename and filename.split(".")[-1] == "xls":
                 # todo -  get 'year' dynamically from user input
-                status, response_msg = upload_stage_2(content, 'xls', u_code, '2020')
+                status, response_msg = upload_stage_2(content, 'xls', u_code, '2020', column_upload)
                 context['display'] = True
                 context['status'] = status
                 context['response_msg'] = response_msg
