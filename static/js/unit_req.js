@@ -539,7 +539,7 @@ $("#allot_buttton").click(function(){
 
 function calc(item, index, arr) {
     var curr_ext =  item.tot ? item.tot : 0
-    var resultant_ext = prev_promo >0 ? (curr_ext-prev_promo) : curr_ext
+    var resultant_ext = (prev_promo >0  && curr_ext >= prev_promo) ? (curr_ext-prev_promo) : curr_ext
     var curr_sanc = item.san ? item.san : 0
     var last_row = index < arr.length - 1 ? false :true
 
@@ -547,6 +547,7 @@ function calc(item, index, arr) {
     var curr_cadre = item.d_cadre
     var next_cadre = (!last_row) ? arr[index + 1].d_cadre :null
     var promotion_scope = (curr_cadre === "XCD" )? 0 : Math.round(next_ext * promote)
+
 
     if(last_row){
             (col_cells[index]).setValue(val)
@@ -564,7 +565,8 @@ function calc(item, index, arr) {
             }
             (col_cells[index]).setValue(cell_value)
             console.log("index:"+index+" => " , curr_ext, curr_sanc,  resultant_ext+promotion_scope, (val-resultant_ext), promotion_scope, next_ext )
-            val = val-cell_value
+            val = (val-cell_value)
+
         }
 }
     

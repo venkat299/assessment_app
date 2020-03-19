@@ -127,25 +127,39 @@ def upload_stage_1(content, extension, ignore_multiple_unit, sheet_name, year):
             # ls.append(('N','W',None,r['SECTION_CD'],r[work_unit_col],r['ONROLL_UNIT'],r[dscd_col],r['GENDER'],r['DOR'],r['NAME'],r[eis_col],r['Comments']
             #         #,r['WORKING_AS'],r['WORKING_SINCE'],r['QUALIFICATION']
             #         ))
-            ls.append(Employee(e_id=year + "_" + str(r[eis_col]),
-                               e_eis=r[eis_col],
-                               e_name=r[name_col],
-                               e_desg_id=year + "_" + r[dscd_col],
-                               e_sect_id=year + "_" + r[sect_col],
-                               e_unit_roll_id=year + "_" + r[roll_unit_col],
-                               e_unit_work_id=year + "_" + r[work_unit_col],
-                               e_year_id=year,
-                               e_dob=r[dob_col],
-                               e_gender=r[gender_col],
-                               e_comments=r[comments_col]
-                               ))
-        print(ls)
+            # ls.append(Employee(e_id=year + "_" + str(r[eis_col]),
+            #                    e_eis=r[eis_col],
+            #                    e_name=r[name_col],
+            #                    e_desg_id=year + "_" + r[dscd_col],
+            #                    e_sect_id=year + "_" + r[sect_col],
+            #                    e_unit_roll_id=year + "_" + r[roll_unit_col],
+            #                    e_unit_work_id=year + "_" + r[work_unit_col],
+            #                    # e_year_id=year,
+            #                    e_dob=r[dob_col],
+            #                    e_gender=r[gender_col],
+            #                    e_comments=r[comments_col]
+            #                    ))
+            emp, created = Employee.objects.update_or_create(e_id=year + "_" + str(r[eis_col]),
+                                                             e_eis=r[eis_col],
+                                                             e_name=r[name_col],
+                                                             e_desg_id=year + "_" + r[dscd_col],
+                                                             e_sect_id=year + "_" + r[sect_col],
+                                                             e_unit_roll_id=year + "_" + r[roll_unit_col],
+                                                             e_unit_work_id=year + "_" + r[work_unit_col],
+                                                             e_year_id=year,
+                                                             # e_dob=r[dob_col],
+                                                             e_gender=r[gender_col],
+                                                             e_comments=r[comments_col])
+            emp.save()
+            ls.append(created)
+
         batch_size = len(ls)
-        if batch_size <= 0:
-            response_message.append("no data found")
-            return 'error', response_message
-        Employee.objects.bulk_create(ls, batch_size)
-        response_message.append('--->{0} records inserted sucessfully'.format(len(ls)))
+        print(batch_size)
+        # if batch_size <= 0:
+        #     response_message.append("no data found")
+        #     return 'error', response_message
+        # Employee.objects.bulk_create(ls, batch_size)
+        response_message.append('--->{0} records inserted sucessfully'.format(batch_size))
 
     return "success", response_message
 
