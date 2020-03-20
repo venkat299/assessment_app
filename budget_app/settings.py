@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'jquery',
-    'jquery_ui'
+    'jquery_ui',
+    # 'papertrail',
+    # 'auditlog'
 ]
 
 MIDDLEWARE = [
