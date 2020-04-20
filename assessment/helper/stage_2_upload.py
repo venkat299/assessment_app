@@ -2,6 +2,7 @@ import functools
 import os
 
 import pyexcel as pe
+from django.db import transaction
 
 from assessment.models import Unit, Desg, Section, Sanction
 
@@ -82,6 +83,7 @@ def sum_acc_sanc(result, row):
         return result + 0
 
 
+@transaction.atomic
 def upload_stage_2(content, extension, u_code, year, column_upload):
     response_message = []
 

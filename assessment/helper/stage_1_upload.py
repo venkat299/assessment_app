@@ -1,4 +1,5 @@
 import pyexcel as pe
+from django.db import transaction
 
 from assessment.models import Unit, Desg, Section, Employee
 
@@ -16,43 +17,45 @@ name_col = 'NAME'
 def validate_row(year, not_first_row, row, ignore_multiple_unit, unit_ls, desg_ls, sect_ls, eis_ls, eis_local_list,
                  working_unit):
     err_ls = []
-    if year + "_" + row[dscd_col] not in desg_ls:
-        err_ls.append(" dscd(" + row[dscd_col] + ")")
-    if year + "_" + row[sect_col] not in sect_ls:
-        err_ls.append(" sect(" + row[sect_col] + ")")
-    if year + "_" + row[work_unit_col] not in unit_ls:
-        err_ls.append(" unit(" + row[work_unit_col] + ")")
-    if year + "_" + row[roll_unit_col] not in unit_ls:
-        err_ls.append(" roll_unit(" + row[roll_unit_col] + ")")
-    # if  row['WORKING_AS'] and row['WORKING_AS'] not in gdesg_ls:
-    #     err.append(" working_as("+row['WORKING_AS']+")")
-    # if  row['WORKING_SINCE']  and not validate_date(row['WORKING_SINCE']) :
-    #     err.append(" date_format("+row['WORKING_SINCE'].strftime('%Y-%m-%d')+")")
-    # if  row['QUALIFICATION']  and row['QUALIFICATION'] not in qualification_ls :
-    #     err.append(" qualification("+row['QUALIFICATION']+")")
-
-    # check duplicate eis in file
-    if str(row[eis_col]) in eis_local_list:
-        err_ls.append(" eis_repeat(" + str(row[eis_col]) + ")")
-    else:
-        eis_local_list.append(str(row[eis_col]))
-
-    # check duplicate eis in db
     try:
-        if str(year) + "_" + str(row[eis_col]) in eis_ls:
-            err_ls.append(" eis_dup_db(" + str(row[eis_col]) + ")")
-    except ValueError as e:
-        err_ls.append(" eis_err(" + str(row[eis_col]) + ")")
+        if year + "_" + row[dscd_col] not in desg_ls:
+            err_ls.append(" dscd(" + row[dscd_col] + ")")
+        if year + "_" + row[sect_col] not in sect_ls:
+            err_ls.append(" sect(" + row[sect_col] + ")")
+        if year + "_" + row[work_unit_col] not in unit_ls:
+            err_ls.append(" unit(" + row[work_unit_col] + ")")
+        if year + "_" + row[roll_unit_col] not in unit_ls:
+            err_ls.append(" roll_unit(" + row[roll_unit_col] + ")")
+        # if  row['WORKING_AS'] and row['WORKING_AS'] not in gdesg_ls:
+        #     err.append(" working_as("+row['WORKING_AS']+")")
+        # if  row['WORKING_SINCE']  and not validate_date(row['WORKING_SINCE']) :
+        #     err.append(" date_format("+row['WORKING_SINCE'].strftime('%Y-%m-%d')+")")
+        # if  row['QUALIFICATION']  and row['QUALIFICATION'] not in qualification_ls :
+        #     err.append(" qualification("+row['QUALIFICATION']+")")
 
-    # check if multiple working_unit present in file
-    if not ignore_multiple_unit:
-        if not_first_row:
-            if str(row[work_unit_col]) not in working_unit:
-                err_ls.append(" multiple_work_unit(" + str(row[work_unit_col]) + ")")
+        # check duplicate eis in file
+        if str(row[eis_col]) in eis_local_list:
+            err_ls.append(" eis_repeat(" + str(row[eis_col]) + ")")
         else:
-            working_unit.append(str(row[work_unit_col]))
-            not_first_row = True
+            eis_local_list.append(str(row[eis_col]))
 
+        # check duplicate eis in db
+        try:
+            if str(year) + "_" + str(row[eis_col]) in eis_ls:
+                err_ls.append(" eis_dup_db(" + str(row[eis_col]) + ")")
+        except ValueError as e:
+            err_ls.append(" eis_err(" + str(row[eis_col]) + ")")
+
+        # check if multiple working_unit present in file
+        if not ignore_multiple_unit:
+            if not_first_row:
+                if str(row[work_unit_col]) not in working_unit:
+                    err_ls.append(" multiple_work_unit(" + str(row[work_unit_col]) + ")")
+            else:
+                working_unit.append(str(row[work_unit_col]))
+                not_first_row = True
+    except KeyError as e:
+        err_ls.append("Couldn't find required columns".format(e))
     # return err list
     if not err_ls:
         return None, eis_local_list, working_unit, not_first_row
@@ -60,6 +63,7 @@ def validate_row(year, not_first_row, row, ignore_multiple_unit, unit_ls, desg_l
         return err_ls, eis_local_list, working_unit, not_first_row
 
 
+@transaction.atomic
 def upload_stage_1(content, extension, ignore_multiple_unit, sheet_name, year):
     response_message = []
 

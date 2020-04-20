@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from logging import INFO
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -48,7 +50,8 @@ INSTALLED_APPS = [
     'jquery',
     'jquery_ui',
     # 'papertrail',
-    # 'auditlog'
+    # 'auditlog',
+    'automated_logging'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'automated_logging.middleware.AutomatedLoggingMiddleware'
 ]
 
 ROOT_URLCONF = 'budget_app.urls'
@@ -150,3 +154,47 @@ CRISPY_TEMPLATE_PACK = 'bootstrap'
 LOGIN_REDIRECT_URL = 'empl_list'
 LOGOUT_REDIRECT_URL = 'login'
 # LOGIN_URL = 'login'
+
+AUTOMATED_LOGGING = {
+    'exclude': {'model': ['admin', 'session', 'automated_logging', 'basehttp', 'contenttypes', 'migrations'],
+                'request': ['GET', 200],
+                'unspecified': []},
+    'modules': ['request', 'model', 'unspecified'],
+    'to_database': True,
+    'loglevel': {'model': INFO,
+                 'request': INFO},
+    'save_na': True,
+    'request': {
+        'query': False
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'db': {
+            'level': 'INFO',
+            'class': 'automated_logging.handlers.DatabaseHandler',
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'automated_logging': {
+            'level': 'INFO',
+            'handlers': ['db'],
+            'propagate': True,
+        },
+        'django': {
+            'level': 'INFO',
+            'handlers': ['db'],
+            'propagate': True,
+        },
+    },
+}
