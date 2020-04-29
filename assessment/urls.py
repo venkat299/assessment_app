@@ -21,8 +21,10 @@ urlpatterns = [
     url(r'^budget_summary_unit/$', main_view.budget_summary_unit, name='budget_summary_unit'),
 
     url(r'^unit_req/$', main_view.unit_req, name='unit_req'),
+    url(r'^unit_req_filtered/$', main_view.unit_req_filtered, name='unit_req_filtered'),
     url(r'^get_req_unit_gdesg/$', main_view.get_req_unit_gdesg, name='get_req_unit_gdesg'),
 
+    url(r'^get_filter_unit_gdesg_list/$', main_view.get_filter_unit_gdesg_list, name='get_filter_unit_gdesg_list'),
     url(r'^get_req_unit_desg/$', main_view.get_req_unit_desg, name='get_req_unit_desg'),
     url(r'^set_req_unit_desg/$', main_view.set_req_unit_desg, name='set_req_unit_desg'),
     url(r'^get_req_unit_sect/$', main_view.get_req_unit_sect, name='get_req_unit_sect'),

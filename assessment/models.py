@@ -181,6 +181,18 @@ class Sanction(models.Model):
         return self.sn_unit.u_name + '__' + self.sn_dscd.d_code + '__' + str(self.sn_req) + '__' + str(self.sn_san)
 
 
+class PrevSanction(models.Model):
+    ps_id = models.CharField(primary_key=True, null=False, max_length=24)
+    ps_dscd = models.ForeignKey(Desg, on_delete=models.CASCADE)
+    ps_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    ps_req = models.IntegerField(default=0)
+    ps_san = models.IntegerField(default=0)
+    ps_comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)
+
+    def __str__(self):
+        return self.ps_unit.u_name + '__' + self.ps_dscd.d_code + '__' + str(self.ps_req) + '__' + str(self.ps_san)
+
+
 class SanctionSection(models.Model):
     sns_id = models.CharField(primary_key=True, null=False, max_length=30)
     sns_sect = models.ForeignKey(Section, on_delete=models.CASCADE)
@@ -195,6 +207,7 @@ class SanctionSection(models.Model):
 
 
 class UnitSancDesg(models.Model):
+    pkey = models.CharField(primary_key=True, max_length=20)
     unit = models.CharField(max_length=12)
     d5 = models.CharField(max_length=12)
     idx = models.CharField(max_length=12)
@@ -230,10 +243,13 @@ class UnitSancDesg(models.Model):
     a_order = models.IntegerField()
     comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)
     retr0 = models.IntegerField()
+    prev_req = models.IntegerField()
+    prev_san = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = "unit_sanc_desg"
+
 
 
 class UnitSancSect(models.Model):
@@ -255,6 +271,7 @@ class UnitSancSect(models.Model):
     class Meta:
         managed = False
         db_table = "unit_sanc_sect"
+
 # class AdditionCat(models.Model):
 #     ac_value = models.CharField(verbose_name="value", max_length=15, primary_key=True)
 #     ac_name = models.CharField(verbose_name="name", max_length=40)

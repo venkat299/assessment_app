@@ -1,4 +1,6 @@
 from PollyReports import Element, SumElement, Rule, Band, Report
+from django.db import models
+from django.db.models import ExpressionWrapper, F
 from reportlab.lib.units import mm
 from reportlab.pdfgen.canvas import Canvas
 
@@ -10,8 +12,13 @@ def funit_dscd_er(self, format, param):
     print(format)
     report_data = UnitSancDesg.objects.values('u_id', 'd5', 'u_name', 'd_gdesig', 'd_id', 'd_rank', 'd_discp', 'd_name',
                                               'd_grade',
-                                              'd_gcode', 'tot', 'san', 'req', 'comment', 'd_cadre').filter(
-        u_id=param['u_id']).order_by('d5', 'd_gcode')
+                                              'd_gcode', 'tot', 'san', 'req', 'comment', 'd_cadre').annotate(
+        total_count=ExpressionWrapper(
+            F('san') + F('tot') + F('req'),
+            output_field=models.IntegerField()
+        )
+    ).filter(
+        u_id=param['u_id'], total_count__gt=0).order_by('d5', 'd_gcode')
     print(report_data)
     rpt = Report(report_data)
 

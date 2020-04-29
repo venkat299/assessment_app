@@ -33,6 +33,8 @@
             <ul class="tab-menu nav navbar-nav navbar-left">
                 <li class=""><a class="hlink {% if active_tab == 'tab1' %} active{% endif %}"
                                 href="{% url 'budget_summary_unit' %}">Summary</a></li>
+                <li class=""><a class="hlink {% if active_tab == 'tab7' %} active{% endif %}"
+                                href="{% url 'unit_req_filtered' %}">Budget Filter</a></li>
                 <li class=""><a class="hlink {% if active_tab == 'tab2' %} active{% endif %}"
                                 href="{% url 'unit_req' %}">Unit Requirement</a></li>
                 <li class=""><a class="hlink {% if active_tab == 'tab3' %} active{% endif %}"

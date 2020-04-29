@@ -66,8 +66,121 @@ function get_static_json_results(){
 
 //alert();
 
-    function create_gdesg_table() {
-     return   new Tabulator("#gdesg_table", {
+function create_gdesg_table() {
+     var table_1 =  new Tabulator("#gdesg_table_area", {
+            height:300,
+            layout:"fitColumns",
+            tooltips: true, //show tool tips on cells
+            addRowPos: "bottom", //when adding a new row, add it to the top of the table
+            history: false, //allow undo and redo actions on the table
+            //	pagination:"local",       //paginate the data
+            //	paginationSize:7,         //allow 7 rows per page of data
+            columnCalcs: "both",
+            movableColumns: false, //allow column order to be changed
+            resizableRows: false, //allow row order to be changed
+            headerSort: false,
+            placeholder:"No Data Available",
+//             footerElement:"<button>Custom Button</button>",
+            initialSort: [ //set the initial sort order of the data
+                {
+                    column: "d_rank",
+                    dir: "asc"
+                },
+            ],
+            columns: [ //define the table columns
+            {
+                    title: "Area",
+                    field: "a_name",
+                    width: 200,
+//                    headerFilter: "input"
+                },
+                {
+                    title: "Group Desig",
+                    field: "d_gdesig",
+                    width: 200,
+//                    headerFilter: "input"
+                },
+//                {
+//                    title: "Code",
+//                    field: "d5",
+//                    align: "left",
+//                    width:100,
+//                    headerFilter: "input"
+//                },
+                {
+                    title: "rank",
+                    field: "d_rank",
+                    visible: false
+                },
+                {
+                    title: "d_id",
+                    field: "d_id",
+                    visible: false
+                },
+                {
+                    title: "u_id",
+                    field: "u_id",
+                    visible: false
+                },
+                         {
+                    title: "Prev San",
+                    field: "psan",
+                    align: "right",
+                    width: 50,
+                     bottomCalc: "sum",
+//                     color:"green"
+                },
+                {
+                    title: "Ext",
+                    field: "ftot",
+                    bottomCalc: "sum",
+                     width: 50,
+                    align: "right",
+                    formatter:function(cell, formatterParams, onRendered){
+                       // console.log(cell)
+                        var data = cell.getData()
+//                        x=cell
+                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d5.slice(-7)+'">'+cell.getValue()+'</a>'
+//                        return cell.getValue().slice(-7);
+                        return  url
+                    },
+                },
+                {
+                    title: "Ret",
+                    field: "retr0",
+                    align: "right",
+                    width: 50,
+                    bottomCalc: "sum",
+                },
+                {
+                    title: "Req",
+                    field: "freq",
+                    width: 50,
+                    bottomCalc: "sum",
+                    align: "right",
+                    color:"orange"
+                },
+                {
+                    title: "San",
+                    field: "fsan",
+                    align: "right",
+                    width: 50,
+                     bottomCalc: "sum",
+                     color:"green"
+                }
+            ],
+            rowClick: function(e, row) {
+                //e - the click event object
+                //row - row component
+                $current_row = row
+                var data = row.getData()
+                console.log(data)
+//                $gdesg_table.setHeaderFilterValue("a_order", data.a_order);
+                $gdesg_table.setFilter("a_order", "=", data.a_order);
+            },
+        });
+
+     var table_2 = new Tabulator("#gdesg_table", {
             height:600,
             layout:"fitColumns",
             tooltips: true, //show tool tips on cells
@@ -80,7 +193,7 @@ function get_static_json_results(){
             resizableRows: false, //allow row order to be changed
             headerSort: false,
             groupClosedShowCalcs:true,
-            groupBy:["u_id", "d_discp"],
+            groupBy:["a_name"],
             placeholder:"No Data Available",
 //             footerElement:"<button>Custom Button</button>",
             initialSort: [ //set the initial sort order of the data
@@ -90,19 +203,25 @@ function get_static_json_results(){
                 },
             ],
             columns: [ //define the table columns
+            {
+                    title: "Unit",
+                    field: "u_name",
+                    width: 200,
+                    headerFilter: "input"
+                },
                 {
-                    title: "Group Designation",
+                    title: "Group Desig",
                     field: "d_gdesig",
-                    width: 300,
+                    width: 200,
                     headerFilter: "input"
                 },
-                {
-                    title: "Code",
-                    field: "d5",
-                    align: "left",
-                    width:100,
-                    headerFilter: "input"
-                },
+//                {
+//                    title: "Code",
+//                    field: "d5",
+//                    align: "left",
+//                    width:100,
+//                    headerFilter: "input"
+//                },
                 {
                     title: "rank",
                     field: "d_rank",
@@ -198,6 +317,8 @@ function get_static_json_results(){
                     });
             },
         });
+
+    return [table_1, table_2]
     }
 
 function add_d5_entry(value, text, $choice){
@@ -216,7 +337,8 @@ function add_d5_entry(value, text, $choice){
         alert("Error: cannot add row")
     });
 }
-    function unit_load(value, text, $choice) {
+
+function unit_load(value, text, $choice) {
         console.log(value);
         $current_sel_unit = value
         $.ajax('/assessment/get_req_unit_gdesg?u_id=' + value, // request url
@@ -240,9 +362,37 @@ function add_d5_entry(value, text, $choice){
                 }
             });
     }
+
     $('#unit_select').dropdown({
         onChange: unit_load
     });
+
+   $('#sql_filter_button').click(function(){
+//           console.log("clicked")
+        filter_val = $('#sql_filter_val').val()
+        $.ajax('/assessment/get_filter_unit_gdesg_list?filter=' + filter_val, // request url
+            {
+                dataType: 'json', // type of response data
+                timeout: 500, // timeout milliseconds
+                success: function(data, status, xhr) {
+                    console.log(data)
+                    $gdesg_table_area.setData(data.area_list);
+                    $gdesg_table.setData(data.unit_list);
+//                    $desg_table.clearData();
+//                    $sect_table.clearData();
+//                    $add_gdesg_combo = $('#add_gdesg').dropdown({
+//                        values: data.desg_list,
+//                        placeholder:"Insert new designation",
+//                        onChange:add_d5_entry
+//                    });
+//                    $add_gdesg_data = data.desg_list
+                },
+                error: function(jqXhr, textStatus, errorMessage) { // error callback
+                           console.log(textStatus, errorMessage)
+                }
+            });
+    });
+
 
     function create_desg_table() {
     return new Tabulator("#desg_table",{
@@ -406,28 +556,28 @@ function add_d5_entry(value, text, $choice){
         });
     }
 
-function update_sanc_table(data){
-                console.log(data)
-                $.ajax({
-                    headers: { "X-CSRFToken": getCookie("csrftoken") },
-                    url:"/assessment/set_req_unit_desg/",
-                    method:"POST", //First change type to method here
-                    data:data,
-                    success:function(response) {
-                        console.log("update row : sanction table success")
-                        var footer_result = ($desg_table.getCalcResults()).bottom;
-                        // console.log(footer_result)
-                        $current_row.update({freq:footer_result.req, fsan:footer_result.san})
-                    },
-                    error:function(){
-                        //alert("error");
-                    }
-                 });
+    function update_sanc_table(data){
+//                console.log(data)
+//                $.ajax({
+//                    headers: { "X-CSRFToken": getCookie("csrftoken") },
+//                    url:"/assessment/set_req_unit_desg/",
+//                    method:"POST", //First change type to method here
+//                    data:data,
+//                    success:function(response) {
+//                        console.log("update row : sanction table success")
+//                        var footer_result = ($desg_table.getCalcResults()).bottom;
+//                        // console.log(footer_result)
+//                        $current_row.update({freq:footer_result.req, fsan:footer_result.san})
+//                    },
+//                    error:function(){
+//                        //alert("error");
+//                    }
+//                 });
 }
     //load sample data into the table
     // $("#desg_table").tabulator("setData", "setData","http://www.getmydata.com/now");
     //$("#desg_table").tabulator("setData", desg_table_data);
-function create_sect_table() {
+    function create_sect_table() {
         return  new Tabulator("#sect_table", {
             // height:320, // set height of table (optional)
             layout:'fitColumns',  //fit columns to width of table (optional)
@@ -494,7 +644,7 @@ function create_sect_table() {
 //                        var url = '<a class="link_col_summ" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_code='+data.u_id.slice(-6)+'&e_desg__d_code='+data.d_id.slice(-7)+'">'+cell.getValue()+'</a>'
 ////                        return cell.getValue().slice(-7);
 //                        return  url
-//                    },    
+//                    },
                 },
                 {
                     title: "Ret",
@@ -554,9 +704,12 @@ function create_sect_table() {
 
 
 get_static_json_results()
-$gdesg_table =  create_gdesg_table()
+res_tables = create_gdesg_table()
+$gdesg_table_area =  res_tables[0]
+$gdesg_table =  res_tables[1]
 $desg_table =  create_desg_table()
 $sect_table =  create_sect_table()
+
 
 
 

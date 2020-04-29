@@ -33,6 +33,13 @@ var summary_table_area =new Tabulator("#area_summary_table", {
                 },
                 {title:"Area code", field:"acde", visible:false },
                 {
+                    title: "Prev San",
+                    field: "psan",
+                    align: "right",
+                    width: 100,
+                     bottomCalc: "sum",
+                },
+                {
                     title: "Ext",
                     field: "ftot",
 //                    bottomCalc: "sum",
@@ -70,6 +77,7 @@ var summary_table_area =new Tabulator("#area_summary_table", {
                     width: 100,
                      bottomCalc: "sum",
                 }
+
             ],
             rowClick: function(e, row) {
                 //e - the click event object
@@ -132,12 +140,19 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
 //                    headerFilter: "input"
                 },
                 {
+                    title: "Prev San",
+                    field: "psan",
+                    align: "right",
+                    width: 100,
+                     bottomCalc: "sum",
+                },
+                {
                     title: "Ext",
                     field: "ftot",
 //                    bottomCalc: "sum",
                      width: 200,
 //                    topCalc:"sum",
-
+                    bottomCalc: "sum",
                     align: "right",
 //                    formatter:function(cell, formatterParams, onRendered){
 //                       // console.log(cell)
@@ -160,7 +175,8 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                     field: "freq",
                     width: 200,
 //                    topCalc: "sum",
-                    align: "right"
+                    align: "right",
+                    bottomCalc: "sum",
                 },
                 {
                     title: "San",
@@ -168,6 +184,7 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                     align: "right",
                     width: 200,
 //                     topCalc: "sum",
+bottomCalc: "sum",
                 }
             ],
 //            rowClick: function(e, row) {
