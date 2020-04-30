@@ -32,7 +32,7 @@ $(function() {
         $.ajax('/assessment/get_all_desg/?', // request url
             {
                 dataType: 'json', // type of response data
-                timeout: 500, // timeout milliseconds
+                timeout: 5000, // timeout milliseconds
                 success: function(data, status, xhr) {
                     $desg_list = data
                     $desg_list.forEach(function(item) {
@@ -57,7 +57,7 @@ $(function() {
             });
         $.ajax('/assessment/get_all_sect/?', {
             dataType: 'json', // type of response data
-            timeout: 500, // timeout milliseconds
+            timeout: 5000, // timeout milliseconds
             success: function(data, status, xhr) {
                 $sect_list = data
                 $sect_list.forEach(function(item) {
@@ -326,7 +326,7 @@ $(function() {
                 $.ajax('/assessment/get_req_unit_desg?u_id=' + data.u_id + '&d5=' + data.d5, // request url
                     {
                         dataType: 'json', // type of response data
-                        timeout: 500, // timeout milliseconds
+                        timeout: 5000, // timeout milliseconds
                         success: function($data, status, xhr) {
                             //                            console.log(data)
                             $desg_table.setData($data);
@@ -340,7 +340,7 @@ $(function() {
                 //                $.ajax('/assessment/get_req_unit_sect?u_id=' + data.u_id + '&d5=' + data.d5, // request url
                 //                    {
                 //                        dataType: 'json', // type of response data
-                //                        timeout: 500, // timeout milliseconds
+                //                        timeout: 5000, // timeout milliseconds
                 //                        success: function($data, status, xhr) {
                 ////                            console.log(data)
                 //                            $sect_table.setData($data);
@@ -364,7 +364,7 @@ $(function() {
         $.ajax('/assessment/get_unit_detail?u_id=' + $current_sel_unit, // request url
             {
                 dataType: 'json', // type of response data
-                timeout: 500, // timeout milliseconds
+                timeout: 5000, // timeout milliseconds
                 success: function(unit_detail, status, xhr) {
                     console.log(unit_detail)
                     var $data = {
@@ -408,7 +408,7 @@ $(function() {
         $.ajax('/assessment/get_req_unit_gdesg?u_id=' + value, // request url
             {
                 dataType: 'json', // type of response data
-                timeout: 500, // timeout milliseconds
+                timeout: 5000, // timeout milliseconds
                 success: function(data, status, xhr) {
                     console.log(data)
                     //                    $gdesg_table.setData(data.unit_sanc );
@@ -441,7 +441,7 @@ $(function() {
         $.ajax('/assessment/get_filter_unit_gdesg_list?filter=' + encodeURIComponent(filter_val), // request url
             {
                 dataType: 'json', // type of response data
-                timeout: 500, // timeout milliseconds
+                timeout: 5000, // timeout milliseconds
                 success: function(data, status, xhr) {
                     console.log(data)
                     $gdesg_table_area.setData(data.area_list);
