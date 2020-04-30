@@ -9,9 +9,9 @@ from django.db.models.functions import Cast
 from django.http import FileResponse, Http404
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 
 from assessment.helper.stage_1_upload import upload_stage_1
-# EmpAddRedTable, EmpSummDesgAreaTable
 from assessment.helper.stage_2_upload import upload_stage_2
 from assessment.models import Employee, Desg, Unit, Sanction, SanctionSection, UnitSancDesg, UnitSancSect
 from assessment.models import Section
@@ -174,6 +174,12 @@ def get_all_sect(request):
     # return HttpResponse(response, content_type='application/json')
 
 
+def get_unit_detail(request):
+    u_id = request.GET.get('u_id')
+    unit = Unit.objects.values('u_id', 'u_name', 'u_type', 'u_area__a_name', 'u_area__a_order').filter(u_id=u_id)[0]
+    return JsonResponse(unit, safe=False)
+
+
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]
@@ -186,7 +192,8 @@ def dictfetchall(cursor):
 def get_req_unit_gdesg(request):
     u_id = request.GET.get('u_id')
     # print(u_id)
-    result1 = UnitSancDesg.objects.values('u_id', 'd5', 'd_gdesig', 'd_rank', 'd_discp').filter(u_id=u_id).order_by(
+    result1 = UnitSancDesg.objects.values('u_id', 'u_name', 'a_order', 'u_type', 'a_name', 'd5', 'd_gdesig', 'd_rank',
+                                          'd_discp').filter(u_id=u_id).order_by(
         'd5').annotate(ftot=Sum('tot'), fsan=Sum('san'),
                        freq=Sum('req'), retr0=Sum('retr0'), psan=Sum('prev_san'))
     # print(result1.query)
@@ -211,12 +218,13 @@ def get_req_unit_gdesg(request):
 
 def get_filter_unit_gdesg_list(request):
     filter = request.GET.get('filter')
+    print("filter > ", filter)
     # d5 = request.GET.get('d5')
     # print(u_id, d5)
     # result1 = UnitSancDesg.objects.raw('SELECT pkey, a_name, a_order, u_id, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, '
     #                                    'd_gcode, tot, san, req, comment, d_cadre, retr0, prev_san FROM Unit_Sanc_Desg where ' + filter + ' '
     #                                    'order by a_order, u_id, d_gcode')
-    query_area = 'SELECT pkey, a_name, a_order, u_id, u_name, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, ' \
+    query_area = 'SELECT pkey, a_name, a_order, u_id, u_name, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, u_type,' \
                  'd_gcode, sum(tot) ftot, sum(san) fsan, sum(req) freq, comment, d_cadre, sum(retr0) retr0, sum(prev_san) psan FROM Unit_Sanc_Desg where ' \
                  + filter + \
                  ' group by a_name, d5 order by a_order'
@@ -224,7 +232,7 @@ def get_filter_unit_gdesg_list(request):
         cursor.execute(query_area, )
         result_area = dictfetchall(cursor)
 
-    query = 'SELECT pkey, a_name, a_order, u_id, u_name, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, ' \
+    query = 'SELECT pkey, a_name, a_order, u_id, u_name, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, u_type,' \
             'd_gcode, sum(tot) ftot, sum(san) fsan, sum(req) freq, comment, d_cadre, sum(retr0) retr0, sum(prev_san) psan FROM Unit_Sanc_Desg where ' \
             + filter + \
             ' group by u_id, d5 order by a_order, u_id, d_gcode'
@@ -237,6 +245,44 @@ def get_filter_unit_gdesg_list(request):
     response = json.dumps(final_result, cls=DjangoJSONEncoder)
     # print(response)
     return HttpResponse(response, content_type='application/json')
+
+
+def get_stat_for_gdesg_list(request):
+    # filter = request.GET.get('filter')
+    u_id = request.GET.get('u_id')
+    d5 = request.GET.get('d5')
+    a_order = request.GET.get('a_order')
+    u_type = request.GET.get('u_type')
+
+    result_area = UnitSancDesg.objects.values('a_name').filter(a_order=a_order, d5=d5) \
+        .annotate(ftot=Sum('tot'), fsan=Sum('san'),
+                  freq=Sum('req'), retr0=Sum('retr0'), psan=Sum('prev_san'))[0]
+    result_area_unit_type = \
+    UnitSancDesg.objects.values('a_name', 'u_type').filter(a_order=a_order, u_type=u_type, d5=d5) \
+        .annotate(ftot=Sum('tot'), fsan=Sum('san'),
+                  freq=Sum('req'), retr0=Sum('retr0'), psan=Sum('prev_san'))[0]
+    result_company = UnitSancDesg.objects.values('d5').filter(d5=d5) \
+        .annotate(ftot=Sum('tot'), fsan=Sum('san'),
+                  freq=Sum('req'), retr0=Sum('retr0'), psan=Sum('prev_san'))[0]
+    result_company_unit_type = UnitSancDesg.objects.values('d5', 'u_type').filter(u_type=u_type, d5=d5) \
+        .annotate(ftot=Sum('tot'), fsan=Sum('san'),
+                  freq=Sum('req'), retr0=Sum('retr0'), psan=Sum('prev_san'))[0]
+
+    # print(result1)
+    final_result = {'area_level': result_area, 'area_type_level': result_area_unit_type, 'wcl_level': result_company,
+                    'wcl_type_level': result_company_unit_type}
+    # response = json.dumps(final_result, cls=DjangoJSONEncoder)
+
+    # response = jsonify('fetched_data', render_template('stat_desg.html', new_fetched_data=final_result))
+    print(final_result)
+    response = render_to_string('stat_desg.html', final_result)
+    # response = jsonify('fetched_data', response)
+    # print(response)
+    return JsonResponse(response, safe=False)
+    # return HttpResponse(response)
+
+
+# get_stat_gdesg_list
 
 def get_req_unit_desg(request):
     u_id = request.GET.get('u_id')

@@ -25,21 +25,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.5/jspdf.plugin.autotable.js"></script>
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>-->
 
-
-<!--<div class="ui basic compact" id="combo_div">-->
-<!--    <select class="ui search selection dropdown" id="unit_select">-->
-<!--        {% if unit_list %}-->
-<!--        {% for unit in unit_list %}-->
-<!--        <option value='{{ unit.u_id }}'><b>{{ unit.u_area__a_name }}</b> - {{ unit.u_name }}</option>-->
-<!--        {% endfor %}-->
-<!--        {% endif %}-->
-<!--    </select>-->
-<!--</div>-->
-<div class="ui action big six wide input">
+<div class=" ui horizontal segments">
+    <div class=" ui segment six wide action input">
     <input id="sql_filter_val"
            placeholder=" Filter d5, a_name, u_id, u_name, u_type, d_cadre d_gdesig, d_id, d_discp, d_name, d_grade"
            type="text">
     <div class="ui button" id="sql_filter_button">Filter</div>
+
+
+    </div>
+
+    <!--                    <div class="ui segment basic compact" id="combo_div">-->
+    <!--                <select class="ui search selection direction dropdown" id="unit_select">-->
+    <!--                    {% if unit_list %}-->
+    <!--                    {% for unit in unit_list %}-->
+    <!--                    <option value='{{ unit.u_id }}'><b>{{ unit.u_area__a_name }}</b> - {{ unit.u_name }}</option>-->
+    <!--                    {% endfor %}-->
+    <!--                    {% endif %}-->
+    <!--                </select>-->
+    <!--            </div>-->
 </div>
 
 <table class="ui celled structured table">
@@ -54,9 +58,22 @@
         <td>
             <div id="gdesg_table_area"></div>
             <div id="gdesg_table"></div>
-            <div class="ui selection dropdown" id="add_gdesg">
+            <div class="ui horizontal segments">
+                <div class="ui segment basic compact" id="combo_div">
+                    <select class="ui search selection direction dropdown" id="unit_select_for_new_entry">
+                        {% if unit_list %}
+                        {% for unit in unit_list %}
+                        <option value='{{ unit.u_id }}'><b>{{ unit.u_area__a_name }}</b> - {{ unit.u_name }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="ui segment">
+                    <div class="ui  search selection direction dropdown" id="add_gdesg">
                 <div class="default text">Insert Group desination</div>
                 <i class="dropdown icon"></i>
+            </div>
+                </div>
             </div>
         </td>
         <td>
@@ -77,6 +94,10 @@
                 <div class="ui basic segment ">
                     <div id="desg_table"></div>
                 </div>
+                <div id="stat_gdesg" class="ui basic segment">
+
+                </div>
+
                 <!--                <div class="ui basic segment ">-->
                 <!--                    <div id="sect_table"></div>-->
                 <!--                </div>-->
@@ -100,6 +121,7 @@
 $(function() {
  $('.tabulator-header-filter input').attr('type', 'ui search');
 });
+
 
 
 

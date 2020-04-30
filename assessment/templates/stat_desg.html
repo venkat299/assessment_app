@@ -1,0 +1,53 @@
+{% block body %}
+<div id="stat_gdesg" class="ui basic segment">
+    <table class="ui very basic collapsing celled table">
+        <thead>
+        <tr>
+            <th class="ui three wide">Level</th>
+            <th class="ui one wide">Prev San</th>
+            <th class="ui one wide">Ext</th>
+            <th class="ui one wide">Ret</th>
+            <th class="ui one wide">Req</th>
+            <th class="ui one wide">San</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ area_level.a_name}} - AREA</td>
+            <td>{{ area_level.psan }}</td>
+            <td>{{ area_level.ftot }}</td>
+            <td>{{ area_level.retr0 }}</td>
+            <td>{{ area_level.freq | default_if_none:0 }}</td>
+            <td>{{ area_level.fsan | default_if_none:0 }}</td>
+        </tr>
+        <tr>
+            <td>{{ area_type_level.a_name}} - AREA - {{ area_type_level.u_type}}</td>
+            <td>{{ area_type_level.psan }}</td>
+            <td>{{ area_type_level.ftot }}</td>
+            <td>{{ area_type_level.retr0 }}</td>
+            <td>{{ area_type_level.freq | default_if_none:0}}</td>
+            <td>{{ area_type_level.fsan | default_if_none:0}}</td>
+        </tr>
+        <tr>
+            <td>WCL</td>
+            <td>{{ wcl_level.psan }}</td>
+            <td>{{ wcl_level.ftot }}</td>
+            <td>{{ wcl_level.retr0 }}</td>
+            <td>{{ wcl_level.freq | default_if_none:0 }}</td>
+            <td>{{ wcl_level.fsan | default_if_none:0}}</td>
+        </tr>
+
+        <tr>
+            <td>WCL - {{ wcl_type_level.u_type}}</td>
+            <td>{{ wcl_type_level.psan }}</td>
+            <td>{{ wcl_type_level.ftot }}</td>
+            <td>{{ wcl_type_level.retr0 }}</td>
+            <td>{{ wcl_type_level.freq | default_if_none:0}}</td>
+            <td>{{ wcl_type_level.fsan | default_if_none:0}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+

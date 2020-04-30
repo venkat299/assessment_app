@@ -93,14 +93,14 @@ function get_static_json_results(){
                 {
                     title: "Group Designation",
                     field: "d_gdesig",
-                    width: 300,
+                    width: 150,
                     headerFilter: "input"
                 },
                 {
                     title: "Code",
                     field: "d5",
                     align: "left",
-                    width:100,
+                    width:75,
                     headerFilter: "input"
                 },
                 {
@@ -122,7 +122,7 @@ function get_static_json_results(){
                     title: "Prev San",
                     field: "psan",
                     align: "right",
-                    width: 50,
+                    width: 75,
                      bottomCalc: "sum",
 //                     color:"green"
                 },
@@ -130,7 +130,7 @@ function get_static_json_results(){
                     title: "Ext",
                     field: "ftot",
                     bottomCalc: "sum",
-                     width: 50,
+                     width: 75,
                     align: "right",
                     formatter:function(cell, formatterParams, onRendered){
                        // console.log(cell)
@@ -145,13 +145,13 @@ function get_static_json_results(){
                     title: "Ret",
                     field: "retr0",
                     align: "right",
-                    width: 50,
+                    width: 75,
                     bottomCalc: "sum",
                 },
                 {
                     title: "Req",
                     field: "freq",
-                    width: 50,
+                    width: 75,
                     bottomCalc: "sum",
                     align: "right",
                     color:"orange"
@@ -160,7 +160,7 @@ function get_static_json_results(){
                     title: "San",
                     field: "fsan",
                     align: "right",
-                    width: 50,
+                    width: 75,
                      bottomCalc: "sum",
                      color:"green"
                 }
@@ -268,7 +268,7 @@ function add_d5_entry(value, text, $choice){
                 {
                     title: "Designation",
                     field: "d_name",
-                    width: 200
+                    width: 150
                 },
 //                {
 //                    title: "Grade",
@@ -279,6 +279,7 @@ function add_d5_entry(value, text, $choice){
                     title: "Code",
                     field: "d_id",
                     align: "left",
+                    width:75,
                        formatter:function(cell, formatterParams, onRendered){
                         return cell.getValue().slice(-7);
                     }
@@ -286,6 +287,7 @@ function add_d5_entry(value, text, $choice){
                 {
                     title: "Grade",
                     field: "d_grade",
+                    width:75,
                     formatter:function(cell, formatterParams){
                         var value = cell.getValue();
                         //console.log(cell.getData())
@@ -310,6 +312,7 @@ function add_d5_entry(value, text, $choice){
                     align: "right",
                     bottomCalc: "sum",
                     validator:"min:0",
+                    width:75,
 //                    formatter:function(cell, formatterParams){
 //                        var value = cell.getValue() ? cell.getValue() : '';
 //                        //console.log(cell.getData())
@@ -328,6 +331,7 @@ function add_d5_entry(value, text, $choice){
                     field: "tot",
                     align: "right",
                     bottomCalc: "sum",
+                    width:75,
                     formatter:function(cell, formatterParams, onRendered){
                        // console.log(cell)
                         var data = cell.getData()
@@ -342,7 +346,8 @@ function add_d5_entry(value, text, $choice){
                     field: "retr0",
                     align: "right",
                     bottomCalc: "sum",
-                    validator:"min:0"
+                    validator:"min:0",
+                    width:75,
                 },
                 {
                     title: "Req",
@@ -351,6 +356,7 @@ function add_d5_entry(value, text, $choice){
                     align: "right",
                     bottomCalc: "sum",
                     validator:"min:0",
+                    width:75,
                     formatter:function(cell, formatterParams){
                         var value =  cell.getValue() ? cell.getValue() : '';
                         //console.log(cell.getData())
@@ -370,6 +376,7 @@ function add_d5_entry(value, text, $choice){
                     align: "right",
                     bottomCalc: "sum",
                     validator:"min:0",
+                    width:75,
                     formatter:function(cell, formatterParams){
                         var value = cell.getValue() ? cell.getValue() : '';
                         //console.log(cell.getData())
@@ -387,7 +394,8 @@ function add_d5_entry(value, text, $choice){
                     title: "Remark",
                     field: "sns_comment",
                      editor:"input",
-                    align: "left"
+                    align: "left",
+//                    width:75,
                 },
             ],
             rowClick: function(e, row) { //trigger an alert message when the row is clicked
@@ -400,8 +408,8 @@ function add_d5_entry(value, text, $choice){
                     data.req=0
                 if(data.san===null || data.req==="")
                     data.san=0
-                if(data.san>=0 && data.req>=0)
-                    update_sanc_table(data)
+//                if(data.san>=0 && data.req>=0)
+                update_sanc_table(data)
              },
         });
     }
@@ -442,7 +450,7 @@ function create_sect_table() {
                 {
                     title: "Section",
                     field: "s_name",
-                    width: 200
+                    width: 150
                 },
                                 {
                     title: "unit",
@@ -458,11 +466,13 @@ function create_sect_table() {
                     title: "Location",
                     field: "s_location",
                     align: "left",
+                    width:150,
                 },
                 {
                     title: "Code",
                     field: "sect",
                     align: "left",
+                    width:75,
                     formatter:function(cell, formatterParams, onRendered){
                         return cell.getValue().slice(-7);
                     },
@@ -472,7 +482,8 @@ function create_sect_table() {
                     title: "s_rank",
                     field: "s_rank",
                     visible: false,
-                    sorter: "number"
+                    sorter: "number",
+                    width:75,
                 },
 //                {
 //                    title: "Prev San",
@@ -487,6 +498,7 @@ function create_sect_table() {
                     field: "tot",
                     align: "right",
                     bottomCalc: "sum",
+                    width:75,
 //                    formatter:function(cell, formatterParams, onRendered){
 //                        console.log(cell)
 //                        data = cell.getData()
@@ -501,7 +513,8 @@ function create_sect_table() {
                     field: "retr0",
                     align: "right",
                     bottomCalc: "sum",
-                    validator:"min:0"
+                    validator:"min:0",
+                    width:75,
                 },
                 {
                     title: "Req",
@@ -509,7 +522,8 @@ function create_sect_table() {
                     editor: "number",
                     align: "right",
                     bottomCalc: "sum",
-                    validator:"min:0"
+                    validator:"min:0",
+                    width:75,
                 },
                 {
                     title: "San",
@@ -517,13 +531,15 @@ function create_sect_table() {
                     editor: "number",
                     align: "right",
                     bottomCalc: "sum",
-                    validator:"min:0"
+                    validator:"min:0",
+                    width:75,
                 },
                 {
                     title: "Remark",
                     field: "sns_comment",
                      editor:"input",
                     align: "left",
+//                    width:75,
                 },
             ],
             rowClick: function(e, row) { //trigger an alert message when the row is clicked

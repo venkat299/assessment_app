@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^get_req_unit_gdesg/$', main_view.get_req_unit_gdesg, name='get_req_unit_gdesg'),
 
     url(r'^get_filter_unit_gdesg_list/$', main_view.get_filter_unit_gdesg_list, name='get_filter_unit_gdesg_list'),
+    url(r'^get_stat_for_gdesg_list/$', main_view.get_stat_for_gdesg_list, name='get_stat_for_gdesg_list'),
+
     url(r'^get_req_unit_desg/$', main_view.get_req_unit_desg, name='get_req_unit_desg'),
     url(r'^set_req_unit_desg/$', main_view.set_req_unit_desg, name='set_req_unit_desg'),
     url(r'^get_req_unit_sect/$', main_view.get_req_unit_sect, name='get_req_unit_sect'),
@@ -32,6 +34,9 @@ urlpatterns = [
 
     url(r'^get_all_desg/$', main_view.get_all_desg, name='get_all_desg'),
     url(r'^get_all_sect/$', main_view.get_all_sect, name='get_all_sect'),
+    url(r'^get_unit_detail/$', main_view.get_unit_detail, name='get_unit_detail'),
+
+
 
     # ======================= class based views ==============================
     url(r'^emp/update/(?P<pk>\w+)/$', class_views.EditEmpView.as_view(), name='emp_update'),
