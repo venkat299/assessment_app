@@ -651,7 +651,6 @@ $(function() {
                 })
 
                 $current_row_table1.update({
-                }
                     freq: footer_result.freq,
                     fsan: footer_result.fsan
                 })
