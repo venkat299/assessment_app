@@ -28,7 +28,7 @@ var summary_table_area =new Tabulator("#area_summary_table", {
                 {
                     title: "Area Name",
                     field: "a_name",
-                    width: 200,
+                    width: 150,
 //                    headerFilter: "input"
                 },
                 {title:"Area code", field:"acde", visible:false },
@@ -150,7 +150,7 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                     title: "Ext",
                     field: "ftot",
 //                    bottomCalc: "sum",
-                     width: 200,
+                     width: 100,
 //                    topCalc:"sum",
                     bottomCalc: "sum",
                     align: "right",
@@ -173,7 +173,7 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                 {
                     title: "Req",
                     field: "freq",
-                    width: 200,
+                    width: 100,
 //                    topCalc: "sum",
                     align: "right",
                     bottomCalc: "sum",
@@ -182,7 +182,7 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                     title: "San",
                     field: "fsan",
                     align: "right",
-                    width: 200,
+                    width: 100,
 //                     topCalc: "sum",
 bottomCalc: "sum",
                 }
