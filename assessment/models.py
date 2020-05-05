@@ -85,7 +85,7 @@ termination_choices = (("T_NA", "NA"),
                        ("T_Dismissal", "Dismissal/Termination"),
                        ("T_Other_reason", "Other reason(Inter Co transfer)"))
 status_choices = (("In_service", "In_service"), ("Not_in_service", "Not_in_service"))
-gender_choices = (("Male", "Male"), ("Female", "Female"))
+gender_choices = (("M", "M"), ("F", "F"))
 
 
 class Section(models.Model):
@@ -112,7 +112,7 @@ class Employee(models.Model):
     e_regsno = models.CharField(verbose_name="Token No", max_length=15, null=True, blank=True)
     e_name = models.CharField(verbose_name="Full Name", max_length=40)
     e_dob = models.DateField(verbose_name="Date of Retirement", null=True, blank=True)
-    e_gender = models.CharField(verbose_name="Gender", choices=gender_choices, default="Male", max_length=10)
+    e_gender = models.CharField(verbose_name="Gender", choices=gender_choices, default="M", max_length=10)
     e_desg = models.ForeignKey(Desg, verbose_name="Designation", related_name='desg_code', on_delete=models.CASCADE)
     e_unit_roll = models.ForeignKey(Unit, verbose_name="On-Roll Unit", on_delete=models.CASCADE,
                                     related_name='e_unit_roll')

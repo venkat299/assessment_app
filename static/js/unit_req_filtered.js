@@ -77,7 +77,7 @@ $(function() {
         $.ajax('/assessment/get_stat_for_gdesg_list?u_id=' + data.u_id + '&d5=' + data.d5 + '&a_order=' + data.a_order + '&u_type=' + data.u_type, // request url
             {
                 dataType: 'json', // type of response data
-                timeout: 2000, // timeout milliseconds
+                timeout: 5000, // timeout milliseconds
                 success: function($data, status, xhr) {
                     //                            console.log($data)
                     $('#stat_gdesg').replaceWith($data);
