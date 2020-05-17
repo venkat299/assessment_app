@@ -26,13 +26,23 @@
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>-->
 
 <div class=" ui horizontal segments">
-    <div class=" ui segment six wide action input">
-    <input id="sql_filter_val"
-           placeholder=" Filter d5, a_name, u_id, u_name, u_type, d_cadre d_gdesig, d_id, d_discp, d_name, d_grade"
-           type="text">
-    <div class="ui button" id="sql_filter_button">Filter</div>
-
-
+    <div class=" ui segment two wide action input">
+        <input id="sql_filter_val"
+               placeholder=" Filter d5, d_code, a_name, u_id, u_name, u_type, d_cadre d_gdesig, d_id, d_discp, d_name, d_grade"
+               type="text">
+        <div class="ui button" id="sql_filter_button">Filter</div>
+    </div>
+    <div class="ui segment">
+        <div class="ui action input">
+            <input id="sanc_dist" placeholder="Distribute Sanc" type="text">
+            <select class="ui compact selection dropdown" id="promote_value">
+                <option selected=1 value=0>0 %</option>
+                <option value=0.05>5 %</option>
+                <option value=0.1>10 %</option>
+                <option value=0.15>15 %</option>
+            </select>
+            <div class="ui button" id="allot_buttton">Distribute</div>
+        </div>
     </div>
 
     <!--                    <div class="ui segment basic compact" id="combo_div">-->

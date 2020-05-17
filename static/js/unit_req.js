@@ -136,7 +136,7 @@ function get_static_json_results(){
                        // console.log(cell)
                         var data = cell.getData()
 //                        x=cell
-                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d5.slice(-7)+'">'+cell.getValue()+'</a>'
+                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d5.slice(-7)+'"><span style="color:green; font-weight:bold;">'+cell.getValue()+'</span></a>'
 //                        return cell.getValue().slice(-7);
                         return  url
                     },
@@ -154,7 +154,18 @@ function get_static_json_results(){
                     width: 75,
                     bottomCalc: "sum",
                     align: "right",
-                    color:"orange"
+                                        formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+
+                        if(d_cadre==='XCD' && tot < value){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='color:orange; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "San",
@@ -162,7 +173,19 @@ function get_static_json_results(){
                     align: "right",
                     width: 75,
                      bottomCalc: "sum",
-                     color:"green"
+                     color:"green",
+                                         formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+
+                        if(d_cadre==='XCD' && tot < value){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 }
             ],
             rowClick: function(e, row) {
@@ -184,18 +207,18 @@ function get_static_json_results(){
                             //        $('p').append('Error: ' + errorMessage);
                         }
                     });
-                $.ajax('/assessment/get_req_unit_sect?u_id=' + data.u_id + '&d5=' + data.d5, // request url
-                    {
-                        dataType: 'json', // type of response data
-                        timeout: 5000, // timeout milliseconds
-                        success: function($data, status, xhr) {
-//                            console.log(data)
-                            $sect_table.setData($data);
-                        },
-                        error: function(jqXhr, textStatus, errorMessage) { // error callback
-                            //        $('p').append('Error: ' + errorMessage);
-                        }
-                    });
+//                $.ajax('/assessment/get_req_unit_sect?u_id=' + data.u_id + '&d5=' + data.d5, // request url
+//                    {
+//                        dataType: 'json', // type of response data
+//                        timeout: 5000, // timeout milliseconds
+//                        success: function($data, status, xhr) {
+////                            console.log(data)
+//                            $sect_table.setData($data);
+//                        },
+//                        error: function(jqXhr, textStatus, errorMessage) { // error callback
+//                            //        $('p').append('Error: ' + errorMessage);
+//                        }
+//                    });
             },
         });
     }
@@ -336,7 +359,7 @@ function add_d5_entry(value, text, $choice){
                        // console.log(cell)
                         var data = cell.getData()
 //                        x=cell
-                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d_id.slice(-7)+'">'+cell.getValue()+'</a>'
+                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d_id.slice(-7)+'"><span style="color:green; font-weight:bold;">'+cell.getValue()+'</span></a>'
 //                        return cell.getValue().slice(-7);
                         return  url
                     },
@@ -392,7 +415,7 @@ function add_d5_entry(value, text, $choice){
                 },
                 {
                     title: "Remark",
-                    field: "sns_comment",
+                    field: "comment",
                      editor:"input",
                     align: "left",
 //                    width:75,

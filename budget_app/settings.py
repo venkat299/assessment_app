@@ -186,15 +186,15 @@ LOGGING = {
         'level': 'WARNING',
     },
     'loggers': {
-        'automated_logging': {
-            'level': 'INFO',
-            'handlers': ['db'],
-            'propagate': True,
-        },
-        'django': {
-            'level': 'INFO',
-            'handlers': ['db'],
-            'propagate': True,
-        },
+        # 'automated_logging': {
+        #     'level': 'INFO',
+        #     'handlers': ['db'],
+        #     'propagate': True,
+        # },
+        # 'django': {
+        #     'level': 'INFO',
+        #     'handlers': ['db'],
+        #     'propagate': True,
+        # },
     },
 }

@@ -309,7 +309,7 @@ def set_req_unit_desg(request):
     obj = Sanction(sn_id=u_id + '_' + d_id, sn_unit_id=u_id, sn_dscd_id=d_id, sn_req=req, sn_san=san,
                    sn_comment=comment)
     obj.save()
-    print(u_id, d_id, san)
+    print(u_id, d_id, "req=", req, "sanc=", san, comment)
     result = {'success': True}
     # print(result)
     response = json.dumps(list(result), cls=DjangoJSONEncoder)

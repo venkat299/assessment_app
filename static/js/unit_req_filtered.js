@@ -603,7 +603,7 @@ $(function() {
                 },
                 {
                     title: "Remark",
-                    field: "sns_comment",
+                    field: "comment",
                     editor: "input",
                     align: "left"
                 },
