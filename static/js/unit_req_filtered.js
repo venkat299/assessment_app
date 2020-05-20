@@ -13,6 +13,8 @@ $(function() {
     var $gdesg_table = ""
     var $gdesg_table_area = ""
     var $desg_table = ""
+    var $desg_table_area = ""
+    var create_desg_table_company = ""
     var $sect_table = ""
     var $current_row_table1 = ""
     var $current_row_table2 = ""
@@ -210,6 +212,7 @@ $(function() {
                         value: data.d5
                     }
                 ]);
+                load_desg_summary_area(filter_val, data.a_order)
             },
         });
 
@@ -328,8 +331,9 @@ $(function() {
                         dataType: 'json', // type of response data
                         timeout: 5000, // timeout milliseconds
                         success: function($data, status, xhr) {
-                            //                            console.log(data)
+//                            console.log(data)
                             $desg_table.setData($data);
+                            ($("#unit_header")[0]).textContent=(data.u_name)+" : Unit Level"
                         },
                         error: function(jqXhr, textStatus, errorMessage) { // error callback
                             //        $('p').append('Error: ' + errorMessage);\
@@ -446,21 +450,42 @@ $(function() {
                     console.log(data)
                     $gdesg_table_area.setData(data.area_list);
                     $gdesg_table.setData(data.unit_list);
-                    //                    $desg_table.clearData();
-                    //                    $sect_table.clearData();
-                    //                    $add_gdesg_combo = $('#add_gdesg').dropdown({
-                    //                        values: data.desg_list,
-                    //                        placeholder:"Insert new designation",
-                    //                        onChange:add_d5_entry
-                    //                    });
-                    //                    $add_gdesg_data = data.desg_list
+                    load_desg_summary_company(filter_val)
                 },
                 error: function(jqXhr, textStatus, errorMessage) { // error callback
                     console.log(textStatus, errorMessage)
                 }
             });
     });
-
+    function load_desg_summary_company(filter_val) {
+        $.ajax('/assessment/get_desg_summary_company?filter=' + encodeURIComponent(filter_val), // request url
+            {
+                dataType: 'json', // type of response data
+                timeout: 5000, // timeout milliseconds
+                success: function(data, status, xhr) {
+                    console.log(data)
+                    $desg_table_company.setData(data.desg_summary_company);
+                },
+                error: function(jqXhr, textStatus, errorMessage) { // error callback
+                    console.log(textStatus, errorMessage)
+                }
+            });
+    }
+    function load_desg_summary_area(filter_val, a_order) {
+        $.ajax('/assessment/get_desg_summary_area?filter=' + encodeURIComponent(filter_val)+'&a_order='+a_order, // request url
+            {
+                dataType: 'json', // type of response data
+                timeout: 5000, // timeout milliseconds
+                success: function(data, status, xhr) {
+                    console.log(data)
+                    $desg_table_area.setData(data.desg_summary_area);
+                    ($("#area_header")[0]).textContent=(data.desg_summary_area[0].a_name)+" : Area Level"
+                },
+                error: function(jqXhr, textStatus, errorMessage) { // error callback
+                    console.log(textStatus, errorMessage)
+                }
+            });
+    }
 
     function create_desg_table() {
         return new Tabulator("#desg_table", {
@@ -624,6 +649,251 @@ $(function() {
         });
     }
 
+    function create_desg_table_area() {
+        return new Tabulator("#desg_table_area", {
+            layout: 'fitColumns', //fit columns to width of table (optional)
+            tooltips: true,
+            columnCalcs: "table",
+            headerSort: false,
+            keybindings: true,
+
+            initialSort: [{
+                column: "d_gcode",
+                dir: "asc"
+            }, ],
+            columns: [ //Define Table Columns
+                {
+                    title: "Designation",
+                    field: "d_name",
+                    width: 200
+                },
+                {
+                    title: "Code",
+                    field: "d_id",
+                    align: "left",
+                    formatter: function(cell, formatterParams, onRendered) {
+                        return cell.getValue().slice(-7);
+                    }
+                },
+                {
+                    title: "Grade",
+                    field: "d_grade",
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue();
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        if (d_cadre === 'XCD') {
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        } else {
+                            return value;
+                        }
+                    }
+                },
+                {
+                    title: "rank",
+                    field: "d_gcode",
+                    visible: false,
+                    sorter: "number"
+                },
+                {
+                    title: "Prev San",
+                    field: "prev_san",
+                    //                    editor: "number",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                },
+                {
+                    title: "Ext",
+                    field: "tot",
+                    align: "right",
+                    bottomCalc: "sum",
+                    formatter: function(cell, formatterParams, onRendered) {
+                        // console.log(cell)
+                        var data = cell.getData()
+                        //                        x=cell
+                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d_id.slice(-7) + '">' + cell.getValue() + '</a>'
+                        //                        return cell.getValue().slice(-7);
+                        return url
+                    },
+                },
+                {
+                    title: "Ret",
+                    field: "retr0",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0"
+                },
+                {
+                    title: "Req",
+                    field: "req",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+                        if (d_cadre === 'XCD' && tot < value) {
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        } else {
+                            return "<span style='color:orange; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
+                },
+                {
+                    title: "San",
+                    field: "san",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+
+                        if (d_cadre === 'XCD' && tot < value) {
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        } else {
+                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
+                },
+                {
+                    title: "Remark",
+                    field: "comment",
+                    editor: "input",
+                    align: "left"
+                },
+            ],
+        });
+    }
+
+    function create_desg_table_companytt() {
+        return new Tabulator("#desg_table_company", {
+            layout: 'fitColumns', //fit columns to width of table (optional)
+            tooltips: true,
+            columnCalcs: "table",
+            headerSort: false,
+            keybindings: true,
+
+            initialSort: [{
+                column: "d_gcode",
+                dir: "asc"
+            }, ],
+            columns: [ //Define Table Columns
+                {
+                    title: "Designation",
+                    field: "d_name",
+                    width: 200
+                },
+                {
+                    title: "Code",
+                    field: "d_id",
+                    align: "left",
+                    formatter: function(cell, formatterParams, onRendered) {
+                        return cell.getValue().slice(-7);
+                    }
+                },
+                {
+                    title: "Grade",
+                    field: "d_grade",
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue();
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        if (d_cadre === 'XCD') {
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        } else {
+                            return value;
+                        }
+                    }
+                },
+                {
+                    title: "rank",
+                    field: "d_gcode",
+                    visible: false,
+                    sorter: "number"
+                },
+                {
+                    title: "Prev San",
+                    field: "prev_san",
+                    //                    editor: "number",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                },
+                {
+                    title: "Ext",
+                    field: "tot",
+                    align: "right",
+                    bottomCalc: "sum",
+                    formatter: function(cell, formatterParams, onRendered) {
+                        // console.log(cell)
+                        var data = cell.getData()
+                        //                        x=cell
+                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d_id.slice(-7) + '">' + cell.getValue() + '</a>'
+                        //                        return cell.getValue().slice(-7);
+                        return url
+                    },
+                },
+                {
+                    title: "Ret",
+                    field: "retr0",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0"
+                },
+                {
+                    title: "Req",
+                    field: "req",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+                        if (d_cadre === 'XCD' && tot < value) {
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        } else {
+                            return "<span style='color:orange; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
+                },
+                {
+                    title: "San",
+                    field: "san",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+
+                        if (d_cadre === 'XCD' && tot < value) {
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        } else {
+                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
+                },
+                {
+                    title: "Remark",
+                    field: "comment",
+                    editor: "input",
+                    align: "left"
+                },
+            ],
+        });
+    }
+
+
     function update_sanc_table(data) {
         console.log(data)
         $.ajax({
@@ -655,7 +925,12 @@ $(function() {
                     fsan: footer_result.fsan
                 })
 
+                var filter_val = $('#sql_filter_val').val()
                 var data = $current_row_table2.getData()
+
+                load_desg_summary_company(filter_val)
+                load_desg_summary_area(filter_val, data.a_order)
+
                 console.log(data)
                 get_stat(data)
             },
@@ -800,7 +1075,10 @@ $(function() {
     $gdesg_table_area = res_tables[0]
     $gdesg_table = res_tables[1]
     $desg_table = create_desg_table()
-    $sect_table = create_sect_table()
+    $desg_table_area = create_desg_table_area()
+    $desg_table_company = create_desg_table_companytt()
+
+//    $sect_table = create_sect_table()
 
 
 

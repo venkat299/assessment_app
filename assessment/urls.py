@@ -25,6 +25,9 @@ urlpatterns = [
     url(r'^get_req_unit_gdesg/$', main_view.get_req_unit_gdesg, name='get_req_unit_gdesg'),
 
     url(r'^get_filter_unit_gdesg_list/$', main_view.get_filter_unit_gdesg_list, name='get_filter_unit_gdesg_list'),
+    url(r'^get_desg_summary_company/$', main_view.get_desg_summary_company, name='get_desg_summary_company'),
+    url(r'^get_desg_summary_area/$', main_view.get_desg_summary_area, name='get_desg_summary_area'),
+
     url(r'^get_stat_for_gdesg_list/$', main_view.get_stat_for_gdesg_list, name='get_stat_for_gdesg_list'),
 
     url(r'^get_req_unit_desg/$', main_view.get_req_unit_desg, name='get_req_unit_desg'),

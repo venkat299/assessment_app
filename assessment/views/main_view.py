@@ -241,9 +241,46 @@ def get_filter_unit_gdesg_list(request):
         result_unit = dictfetchall(cursor)
 
     # print(result1)
-    final_result = {'area_list': list(result_area), 'unit_list': list(result_unit)}
+    final_result = {'area_list': list(result_area), 'unit_list': list(result_unit), }
     response = json.dumps(final_result, cls=DjangoJSONEncoder)
     # print(response)
+    return HttpResponse(response, content_type='application/json')
+
+
+def get_desg_summary_company(request):
+    filter = request.GET.get('filter')
+    print(filter)
+    query = ' select a_name, u_id, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, d_gcode, d_cadre, ' \
+            ' sum(tot) tot, sum(san) san, sum(req) req, sum(retr0) retr0, sum(prev_san)  prev_san FROM Unit_Sanc_Desg where ' \
+            + filter + \
+            'group by d_gcode order by d_gcode'
+    print(query)
+    with connection.cursor() as cursor:
+        cursor.execute(query, )
+        desg_summary_company = dictfetchall(cursor)
+
+    final_result = {'desg_summary_company': list(desg_summary_company)}
+    response = json.dumps(final_result, cls=DjangoJSONEncoder)
+    return HttpResponse(response, content_type='application/json')
+
+
+def get_desg_summary_area(request):
+    filter = request.GET.get('filter')
+    a_order = request.GET.get('a_order')
+    print(filter)
+    print(a_order)
+    query = ' select a_name, u_id, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, d_gcode, d_cadre, ' \
+            ' sum(tot) tot, sum(san) san, sum(req) req, sum(retr0) retr0, sum(prev_san)  prev_san FROM Unit_Sanc_Desg where ' \
+            + filter + \
+            ' and a_order= ' \
+            + str(a_order) + \
+            ' group by d_gcode order by d_gcode'
+    with connection.cursor() as cursor:
+        cursor.execute(query, )
+        desg_summary_area = dictfetchall(cursor)
+
+    final_result = {'desg_summary_area': list(desg_summary_area)}
+    response = json.dumps(final_result, cls=DjangoJSONEncoder)
     return HttpResponse(response, content_type='application/json')
 
 
