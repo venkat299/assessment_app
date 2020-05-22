@@ -36,14 +36,14 @@ var summary_table_area =new Tabulator("#area_summary_table", {
                     title: "Prev San",
                     field: "psan",
                     align: "right",
-                    width: 100,
+                    width: 75,
                      bottomCalc: "sum",
                 },
                 {
                     title: "Ext",
                     field: "ftot",
 //                    bottomCalc: "sum",
-                     width: 100,
+                     width: 75,
                     bottomCalc:"sum",
 
                     align: "right",
@@ -56,17 +56,17 @@ var summary_table_area =new Tabulator("#area_summary_table", {
 //                        return url
 //                    },
                 },
-//                {
-//                    title: "Ret",
-//                    field: "fret",
-//                    align: "right",
-////                    width: 50,
-//                    bottomCalc: "sum",
-//                },
+                {
+                    title: "Ret",
+                    field: "retr0",
+                    align: "right",
+                    width: 75,
+                    bottomCalc: "sum",
+                },
                 {
                     title: "Req",
                     field: "freq",
-                    width: 100,
+                    width: 75,
                     bottomCalc: "sum",
                     align: "right"
                 },
@@ -74,7 +74,7 @@ var summary_table_area =new Tabulator("#area_summary_table", {
                     title: "San",
                     field: "fsan",
                     align: "right",
-                    width: 100,
+                    width: 75,
                      bottomCalc: "sum",
                 }
 
@@ -143,14 +143,14 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                     title: "Prev San",
                     field: "psan",
                     align: "right",
-                    width: 100,
+                    width: 75,
                      bottomCalc: "sum",
                 },
                 {
                     title: "Ext",
                     field: "ftot",
 //                    bottomCalc: "sum",
-                     width: 100,
+                     width: 75,
 //                    topCalc:"sum",
                     bottomCalc: "sum",
                     align: "right",
@@ -163,17 +163,17 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
 //                        return url
 //                    },
                 },
-//                {
-//                    title: "Ret",
-//                    field: "fret",
-//                    align: "right",
-////                    width: 50,
-//                    bottomCalc: "sum",
-//                },
+                {
+                    title: "Ret",
+                    field: "retr0",
+                    align: "right",
+                    width: 75,
+                    bottomCalc: "sum",
+                },
                 {
                     title: "Req",
                     field: "freq",
-                    width: 100,
+                    width: 75,
 //                    topCalc: "sum",
                     align: "right",
                     bottomCalc: "sum",
@@ -182,7 +182,7 @@ var summary_table_unit =new Tabulator("#unit_summary_table", {
                     title: "San",
                     field: "fsan",
                     align: "right",
-                    width: 100,
+                    width: 75,
 //                     topCalc: "sum",
 bottomCalc: "sum",
                 }

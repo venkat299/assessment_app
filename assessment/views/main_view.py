@@ -139,7 +139,9 @@ def unit_req(request):
 
 
 def unit_req_filtered(request):
-    unit_ls = Unit.objects.values('u_id', 'u_name', 'u_type', 'u_area__a_name')
+    unit_ls = Unit.objects.values('u_id', 'u_name', 'u_type', 'u_area__a_name').order_by('u_area__a_order', 'u_type',
+                                                                                         'u_id')
+    # dscd_ls = Desg.objects.values()
     context = {'unit_list': unit_ls}
     # print(unit_ls)
     return render(request, 'unit_req_filtered.html', context)
@@ -147,11 +149,13 @@ def unit_req_filtered(request):
 def budget_summary_unit(request):
     unit_summary = UnitSancDesg.objects.values('u_id', 'u_name', 'u_type', 'u_code', 'a_name', 'a_order', 'acde', ) \
         .annotate(ftot=Sum('tot'), fsan=Sum('san'), freq=Sum('req'), psan=Sum('prev_san'), preq=Sum('prev_req'),
+                  retr0=Sum('retr0'),
                   order=Cast('a_order', FloatField())).order_by(
         'order', '-u_type', 'u_code')
     area_summary = UnitSancDesg.objects.values('a_name', 'a_order', 'acde', ) \
         .order_by('order', ) \
         .annotate(ftot=Sum('tot'), fsan=Sum('san'), freq=Sum('req'), psan=Sum('prev_san'), preq=Sum('prev_req'),
+                  retr0=Sum('retr0'),
                   order=Cast('a_order', FloatField()))
     context = {'unit_summary': json.dumps(list(unit_summary), cls=DjangoJSONEncoder),
                'area_summary': json.dumps(list(area_summary), cls=DjangoJSONEncoder)
@@ -209,6 +213,25 @@ def get_req_unit_gdesg(request):
     # print(result2)get_filter_unit_gdesg_list
 
     final_result = {'unit_sanc': list(result1), 'desg_list': list(result2)}
+    response = json.dumps(final_result, cls=DjangoJSONEncoder)
+
+    return HttpResponse(response, content_type='application/json')
+
+
+def get_all_gdesg(request):
+    with connection.cursor() as cursor:
+        cursor.execute('''  SELECT substr(ad.d_code, -5)||"@"||group_concat(d_grade||":"||substr(ad.d_code,1,2))  value,
+                            d_year_id,
+                            d_discp,
+                            d_gdesig AS name
+                            FROM assessment_desg ad
+                            GROUP BY substr(ad.d_code, -5) ''')
+        result2 = dictfetchall(cursor)
+
+    # print(result2.query)
+    # print(result2)get_filter_unit_gdesg_list
+
+    final_result = {'desg_list': list(result2)}
     response = json.dumps(final_result, cls=DjangoJSONEncoder)
 
     return HttpResponse(response, content_type='application/json')

@@ -333,7 +333,7 @@ $(function() {
                         success: function($data, status, xhr) {
 //                            console.log(data)
                             $desg_table.setData($data);
-                            ($("#unit_header")[0]).textContent=(data.u_name)+" : Unit Level"
+                            ($("#unit_header")[0]).textContent=(data.u_name)+" / "+data.a_name
                         },
                         error: function(jqXhr, textStatus, errorMessage) { // error callback
                             //        $('p').append('Error: ' + errorMessage);\

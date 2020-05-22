@@ -25,35 +25,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.5/jspdf.plugin.autotable.js"></script>
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>-->
 
-<div class=" ui horizontal segments">
-    <div class=" ui segment two wide action input">
-        <input id="sql_filter_val"
-               placeholder=" Filter d5, d_code, a_name, u_id, u_name, u_type, d_cadre d_gdesig, d_id, d_discp, d_name, d_grade"
-               type="text">
-        <div class="ui button" id="sql_filter_button">Filter</div>
-    </div>
-    <div class="ui segment">
-        <div class="ui action input">
-            <input id="sanc_dist" placeholder="Distribute Sanc" type="text">
-            <select class="ui compact selection dropdown" id="promote_value">
-                <option selected=1 value=0>0 %</option>
-                <option value=0.05>5 %</option>
-                <option value=0.1>10 %</option>
-                <option value=0.15>15 %</option>
-            </select>
-            <div class="ui button" id="allot_buttton">Distribute</div>
+<div class=" ui horizontal  segments">
+    <div class=" ui compact segment">
+        <div class="ui  search selection direction dropdown" id="d5_select_filter">
+            <div class="default text">Filter by grp desg</div>
+            <i class="dropdown icon"></i>
         </div>
     </div>
+    <div class=" ui compact segment">
+        <div class="ui form">
+            <div class="inline fields" id="grade_fields">
+                <label>Grades : </label>
+            </div>
+        </div>
+    </div>
+    <div class="ui segment compact">
+        <div class=" ui  action  input">
+            <input id="sql_filter_val"
+                   placeholder=" Filter d5, d_code, a_name, u_id, u_name, u_type, d_cadre d_gdesig, d_id, d_discp, d_name, d_grade"
+                   type="text">
+            <div class="ui button" id="sql_filter_button">Filter</div>
+        </div>
+    </div>
+    <!--                    </div>-->
 
-    <!--                    <div class="ui segment basic compact" id="combo_div">-->
-    <!--                <select class="ui search selection direction dropdown" id="unit_select">-->
-    <!--                    {% if unit_list %}-->
-    <!--                    {% for unit in unit_list %}-->
-    <!--                    <option value='{{ unit.u_id }}'><b>{{ unit.u_area__a_name }}</b> - {{ unit.u_name }}</option>-->
-    <!--                    {% endfor %}-->
-    <!--                    {% endif %}-->
-    <!--                </select>-->
+    <!--                     <div  class="ui " multiple="" id="grade_select_filter">-->
     <!--            </div>-->
+    <!--                </div>-->
+    <!--     <div class="ui segment basic compact" id="d5_filter_div">-->
+
+    <!--     </div>-->
+
 </div>
 
 <table class="ui celled structured table">
@@ -142,6 +144,76 @@ $(function() {
 });
 
 
+$.ajax('/assessment/get_all_gdesg?', // request url
+            {
+                dataType: 'json', // type of response data
+                timeout: 5000, // timeout milliseconds
+                success: function(data, status, xhr) {
+                    console.log(data)
+
+                    var $filter_gdesg_combo = $('#d5_select_filter').dropdown({
+                        values: data.desg_list,
+                        placeholder: "Filter d5 desg",
+                        onChange: display_grade_opt
+                    });
+                },
+                error: function(jqXhr, textStatus, errorMessage) { // error callback
+                    //        $('p').append('Error: ' + errorMessage);
+                    console.log(errorMessage)
+                }
+            });
+
+var selected_grade = []
+function display_grade_opt(value,name){
+    selected_grade = []
+    console.log(value)
+    if(value){
+        d5_val= value.split("@")[0]
+        var $filter_val='d5="'+d5_val+'"'
+        $('#sql_filter_val')[0].value=$filter_val
+
+        var grades = (value.split("@")[1]).split(",")
+        grades = grades.map(x => ({"name":x.split(":")[0], "value":x.split(":")[1]}));
+        console.log("grades", grades)
+        var template='<div class="field"><div class="ui checkbox"><input type="checkbox" name="@value"><label>@name</label></div></div>'
+
+        var html_temp = "<label>Grades : </label>"
+        grades.forEach(function(item){
+            html_temp =html_temp+(template.replace("@name",item.name)).replace("@value",item.value)
+        })
+        $("#grade_fields")[0].innerHTML=html_temp
+        html_temp="<label>Grades : </label>"
+
+        $('.ui.checkbox').checkbox({
+            onChange: function() {
+            var val= this.name
+            if(this.checked){
+                selected_grade.push(val)
+                var grade_query = selected_grade.join('","')
+                $('#sql_filter_val')[0].value= $filter_val + ' and substr(d_code,1,2) in ("' + grade_query + '")'
+            }
+            else{
+                selected_grade = selected_grade.filter(item => item !== val)
+                if (selected_grade.length>0){
+                    var grade_query = selected_grade.join('","')
+                    $('#sql_filter_val')[0].value= $filter_val + ' and substr(d_code,1,2) in ("' + grade_query + '")'
+                }
+
+            }
+
+            }
+        });
+    }
+
+
+}
 
 
 </script>
+<style>
+.checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"], .radio input[type="radio"], .radio-inline input[type="radio"] {
+	margin: 0px !important;
+}
+
+
+</style>
