@@ -291,7 +291,7 @@ def get_desg_summary_area(request):
     filter = request.GET.get('filter')
     a_order = request.GET.get('a_order')
     print(filter)
-    print(a_order)
+    # print(a_order)
     query = ' select a_name, u_id, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, d_gcode, d_cadre, ' \
             ' sum(tot) tot, sum(san) san, sum(req) req, sum(retr0) retr0, sum(prev_san)  prev_san FROM Unit_Sanc_Desg where ' \
             + filter + \
