@@ -442,6 +442,9 @@ $(function() {
     $('#sql_filter_button').click(function() {
         //           console.log("clicked")
         filter_val = $('#sql_filter_val').val()
+        $desg_table_area.setData([]);
+        $desg_table_company.setData([]);
+        $desg_table.setData([]);
         $.ajax('/assessment/get_filter_unit_gdesg_list?filter=' + encodeURIComponent(filter_val), // request url
             {
                 dataType: 'json', // type of response data
