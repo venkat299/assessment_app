@@ -276,7 +276,7 @@ def get_desg_summary_company(request):
     query = ' select a_name, u_id, d5, d_gdesig, d_id, d_rank, d_discp, d_name, d_grade, d_gcode, d_cadre, ' \
             ' sum(tot) tot, sum(san) san, sum(req) req, sum(retr0) retr0, sum(prev_san)  prev_san FROM Unit_Sanc_Desg where ' \
             + filter + \
-            'group by d_gcode order by d_gcode'
+            ' group by d_gcode order by d_gcode'
     print(query)
     with connection.cursor() as cursor:
         cursor.execute(query, )

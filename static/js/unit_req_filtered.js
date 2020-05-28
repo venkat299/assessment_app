@@ -23,7 +23,7 @@ $(function() {
     var $desg_list = []
     var $desg_list_dict = {}
     //var $d5_list =[]
-    var $d5_list_dict = {}
+     $d5_list_dict = {}
     var $sect_list = []
     var $sect_list_dict = {}
 
@@ -36,6 +36,7 @@ $(function() {
                 dataType: 'json', // type of response data
                 timeout: 5000, // timeout milliseconds
                 success: function(data, status, xhr) {
+                console.log(data)
                     $desg_list = data
                     $desg_list.forEach(function(item) {
                         $desg_list_dict[item.d_code] = item
@@ -364,6 +365,7 @@ $(function() {
         if (value === "" || value === null)
             return null;
         var $d5 = $d5_list_dict[value]
+        console.log(value, $d5_list_dict)
 
         $.ajax('/assessment/get_unit_detail?u_id=' + $current_sel_unit, // request url
             {
