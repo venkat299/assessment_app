@@ -13,6 +13,7 @@ function calculate_promo($data, table){
 //     console.log($data[1])
     var prev_item = null
     var vacancy = 0
+    var prev_cadre = null
     for (i=0; i<$data.length; i++){
 //        var item = (data[i])
         if(($data[i]).d_cadre === "CD" && prev_item ===null){
@@ -20,6 +21,7 @@ function calculate_promo($data, table){
             prev_item = ($data[i])
             var diff =   ($data[i]).san -(($data[i]).tot)
             vacancy = (diff > 0) ? diff : 0
+            prev_cadre = i
             console.log("vacancy", vacancy, "diff", diff)
             console.log("direct_promo first >>",($data[i]).d_grade,($data[i]).tot, ($data[i]).san, direct_promo)
 
@@ -30,9 +32,10 @@ function calculate_promo($data, table){
             var resultant_ext =    ($data[i]).tot -direct_promo
             var diff = (  ($data[i]).san - resultant_ext)
             vacancy = (diff > 0)? diff : 0
-            $data[i]['promo'] = direct_promo
+            $data[prev_cadre]['promo'] = direct_promo
             console.log("direct_promo",($data[i]).d_grade,($data[i]).tot, ($data[i]).san, direct_promo)
             prev_item = ($data[i])
+            prev_cadre = i
         }
     }
 //    console.log("result:", $data[1])
@@ -671,7 +674,10 @@ $(function() {
                     align: "right",
                     bottomCalc: "sum",
                     validator: "min:0",
-                    color:"yellow"
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue()?cell.getValue():0;
+                        return "<span style='color:blue;'>" + value + "</span>";
+                    }
                 },
 //                {
 //                    title: "Net Promo",
@@ -730,14 +736,14 @@ $(function() {
                     field: "d_name",
                     width: 200
                 },
-                {
-                    title: "Code",
-                    field: "d_id",
-                    align: "left",
-                    formatter: function(cell, formatterParams, onRendered) {
-                        return cell.getValue().slice(-7);
-                    }
-                },
+//                {
+//                    title: "Code",
+//                    field: "d_id",
+//                    align: "left",
+//                    formatter: function(cell, formatterParams, onRendered) {
+//                        return cell.getValue().slice(-7);
+//                    }
+//                },
                 {
                     title: "Grade",
                     field: "d_grade",
@@ -830,7 +836,10 @@ $(function() {
                     align: "right",
                     bottomCalc: "sum",
                     validator: "min:0",
-                    color:"yellow"
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue()?cell.getValue():0;
+                        return "<span style='color:blue;'>" + value + "</span>";
+                    }
                 },
                 {
                     title: "Remark",
@@ -860,14 +869,14 @@ $(function() {
                     field: "d_name",
                     width: 200
                 },
-                {
-                    title: "Code",
-                    field: "d_id",
-                    align: "left",
-                    formatter: function(cell, formatterParams, onRendered) {
-                        return cell.getValue().slice(-7);
-                    }
-                },
+//                {
+//                    title: "Code",
+//                    field: "d_id",
+//                    align: "left",
+//                    formatter: function(cell, formatterParams, onRendered) {
+//                        return cell.getValue().slice(-7);
+//                    }
+//                },
                 {
                     title: "Grade",
                     field: "d_grade",
@@ -960,7 +969,10 @@ $(function() {
                     align: "right",
                     bottomCalc: "sum",
                     validator: "min:0",
-                    color:"yellow"
+                    formatter: function(cell, formatterParams) {
+                        var value = cell.getValue()?cell.getValue():0;
+                        return "<span style='color:blue;'>" + value + "</span>";
+                    }
                 },
                 {
                     title: "Remark",
