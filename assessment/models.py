@@ -29,7 +29,7 @@ class Area(models.Model):
 
 class Unit(models.Model):
     # status_choices = (("NOT_ACTIVE", "NOT_ACTIVE"), ("ACTIVE", "Not_in_service"))
-    u_id = models.CharField(verbose_name="Unit Code", primary_key=True, null=False, max_length=12)
+    u_id = models.CharField(verbose_name="Unit Id", primary_key=True, null=False, max_length=12)
     u_area = models.ForeignKey(Area, on_delete=models.CASCADE)
     u_name = models.CharField(max_length=20)
     u_type = models.CharField(max_length=2)

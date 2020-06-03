@@ -1,4 +1,6 @@
 *._.DS_Store
+*/._*
+
 *.pyc
 *.xls
 

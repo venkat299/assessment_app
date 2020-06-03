@@ -32,10 +32,8 @@ def in_ied_execs_grp(user):
     return user.groups.filter(name='ied_execs').exists()
     # return True
 
-
 def index(request):
     return render(request, 'base.html')
-
 
 # @user_passes_test(in_ied_execs_grp)
 def upload_files(request):

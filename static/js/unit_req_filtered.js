@@ -8,6 +8,36 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function calculate_promo($data, table){
+//alert("calc promotion")
+//     console.log($data[1])
+    var prev_item = null
+    var vacancy = 0
+    for (i=0; i<$data.length; i++){
+//        var item = (data[i])
+        if(($data[i]).d_cadre === "CD" && prev_item ===null){
+        // set prev item to current item
+            prev_item = ($data[i])
+            var diff =   ($data[i]).san -(($data[i]).tot)
+            vacancy = (diff > 0) ? diff : 0
+            console.log("vacancy", vacancy, "diff", diff)
+            console.log("direct_promo first >>",($data[i]).d_grade,($data[i]).tot, ($data[i]).san, direct_promo)
+
+        }else if(($data[i]).d_cadre === "CD"){
+//            console.log("in cadre: ", $data[i].d_cadre)
+            console.log("vacancy", vacancy)
+            var direct_promo = (vacancy<($data[i]).tot) ? vacancy : ($data[i]).tot
+            var resultant_ext =    ($data[i]).tot -direct_promo
+            var diff = (  ($data[i]).san - resultant_ext)
+            vacancy = (diff > 0)? diff : 0
+            $data[i]['promo'] = direct_promo
+            console.log("direct_promo",($data[i]).d_grade,($data[i]).tot, ($data[i]).san, direct_promo)
+            prev_item = ($data[i])
+        }
+    }
+//    console.log("result:", $data[1])
+    return $data
+}
 $(function() {
 
     var $gdesg_table = ""
@@ -332,7 +362,9 @@ $(function() {
                         dataType: 'json', // type of response data
                         timeout: 5000, // timeout milliseconds
                         success: function($data, status, xhr) {
-//                            console.log(data)
+//                             console.log("$data", $data)
+                            $data = calculate_promo($data)
+//                             console.log("$data", data)
                             $desg_table.setData($data);
                             ($("#unit_header")[0]).textContent=(data.u_name)+" / "+data.a_name
                         },
@@ -469,6 +501,7 @@ $(function() {
                 timeout: 5000, // timeout milliseconds
                 success: function(data, status, xhr) {
                     console.log(data)
+                    data.desg_summary_company = calculate_promo(data.desg_summary_company)
                     $desg_table_company.setData(data.desg_summary_company);
                 },
                 error: function(jqXhr, textStatus, errorMessage) { // error callback
@@ -483,8 +516,9 @@ $(function() {
                 timeout: 5000, // timeout milliseconds
                 success: function(data, status, xhr) {
                     console.log(data)
+                    data.desg_summary_area = calculate_promo(data.desg_summary_area)
                     $desg_table_area.setData(data.desg_summary_area);
-                    ($("#area_header")[0]).textContent=(data.desg_summary_area[0].a_name)+" : Area Level"
+                    ($("#area_header")[0]).textContent=(data.desg_summary_area[0].a_name)+" : AREA LEVEL"
                 },
                 error: function(jqXhr, textStatus, errorMessage) { // error callback
                     console.log(textStatus, errorMessage)
@@ -523,14 +557,14 @@ $(function() {
                 //                    field: "d_grade",
                 //                    align: "left",
                 //                },
-                {
-                    title: "Code",
-                    field: "d_id",
-                    align: "left",
-                    formatter: function(cell, formatterParams, onRendered) {
-                        return cell.getValue().slice(-7);
-                    }
-                },
+//                {
+//                    title: "Code",
+//                    field: "d_id",
+//                    align: "left",
+//                    formatter: function(cell, formatterParams, onRendered) {
+//                        return cell.getValue().slice(-7);
+//                    }
+//                },
                 {
                     title: "Grade",
                     field: "d_grade",
@@ -632,6 +666,22 @@ $(function() {
                     }
                 },
                 {
+                    title: "Promo",
+                    field: "promo",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    color:"yellow"
+                },
+//                {
+//                    title: "Net Promo",
+//                    field: "net_promo",
+//                    align: "right",
+//                    bottomCalc: "sum",
+//                    color:"yellow",
+//                    validator: "min:0"
+//                },
+                {
                     title: "Remark",
                     field: "comment",
                     editor: "input",
@@ -642,14 +692,22 @@ $(function() {
                 // alert("Row " + row.getData().grade + " Clicked!!!!");
             },
             cellEdited: function(cell) {
-                console.log(cell)
+                console.log("cell", cell)
                 var data = cell.getRow().getData()
                 if (data.req === null || data.req === "")
                     data.req = 0
                 if (data.san === null || data.req === "")
                     data.san = 0
 //                if (data.san >= 0 && data.req >= 0)
-                update_sanc_table(data)
+//               data = calculate_promo(data)
+
+               update_sanc_table(data)
+            },
+            dataEdited:function(data){
+                //data - the updated table data
+                console.log("data", data)
+//                data = calculate_promo(data)
+//                $desg_table.setData(data)
             },
         });
     }
@@ -765,6 +823,14 @@ $(function() {
                             return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
                         }
                     }
+                },
+                                {
+                    title: "Promo",
+                    field: "promo",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    color:"yellow"
                 },
                 {
                     title: "Remark",
@@ -887,6 +953,14 @@ $(function() {
                             return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
                         }
                     }
+                },
+                                {
+                    title: "Promo",
+                    field: "promo",
+                    align: "right",
+                    bottomCalc: "sum",
+                    validator: "min:0",
+                    color:"yellow"
                 },
                 {
                     title: "Remark",
