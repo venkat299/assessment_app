@@ -2,6 +2,7 @@
 import json
 
 from dal import autocomplete
+from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import connection
 from django.db.models import Sum, FloatField
@@ -17,6 +18,7 @@ from assessment.models import Employee, Desg, Unit, Sanction, SanctionSection, U
 from assessment.models import Section
 from assessment.reports.report import ReportGenerator
 
+EDIT_ENABLED = getattr(settings, "EDIT_ENABLED", False)
 
 # def index(request):
 #     employee_list = Employee.objects.order_by('-e_dob')[:5]
@@ -359,6 +361,10 @@ def get_req_unit_desg(request):
 
 
 def set_req_unit_desg(request):
+    if not EDIT_ENABLED:
+        print("Cannot edit; edit feature locked")
+        msg = {'success': False, "msg": "Cannot edit; edit feature locked"}
+        return HttpResponse(json.dumps(msg, cls=DjangoJSONEncoder), content_type='application/json')
     u_id = request.POST['u_id']
     d_id = request.POST['d_id']
     req = request.POST['req']
@@ -386,6 +392,10 @@ def get_req_unit_sect(request):
 
 
 def set_req_unit_sect(request):
+    if not EDIT_ENABLED:
+        print("Cannot edit; edit feature locked")
+        msg = {'success': False, "msg": "Cannot edit; edit feature locked"}
+        return HttpResponse(json.dumps(msg, cls=DjangoJSONEncoder), content_type='application/json')
     u_id = request.POST['unit']
     sect = request.POST['sect']
     d5 = request.POST['d5']

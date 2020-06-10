@@ -45,6 +45,15 @@ class Unit(models.Model):
         return self.u_area.a_code + '__' + self.u_code + '__' + self.u_name
 
 
+class Group_Desg(models.Model):
+    type = (("EX", "EX"), ("NE", "NE"))
+    u_id = models.CharField(verbose_name="d5_id", primary_key=True, null=False, max_length=12)
+    gd_code = models.CharField(verbose_name="d5", max_length=5)
+    gd_type = models.CharField(choices=type, default="CD", max_length=10)
+    # gd_name = models.CharField(max_length=40)
+    gd_rank = models.IntegerField()
+
+
 class Desg(models.Model):
     cadre_choices = (("CD", "CD"), ("XCD", "XCD"))
     d_id = models.CharField(verbose_name="Desg Code", primary_key=True, null=False, max_length=12)

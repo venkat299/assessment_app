@@ -61,12 +61,10 @@ function get_static_json_results(){
                             console.log("failed to retrieve sect data")
                         }
                     });
-
 }
 
 //alert();
-
-    function create_gdesg_table() {
+function create_gdesg_table() {
      return   new Tabulator("#gdesg_table", {
             height:600,
             layout:"fitColumns",
@@ -451,7 +449,7 @@ function update_sanc_table(data){
                         $current_row.update({freq:footer_result.req, fsan:footer_result.san})
                     },
                     error:function(){
-                        //alert("error");
+                        alert("error");
                     }
                  });
 }

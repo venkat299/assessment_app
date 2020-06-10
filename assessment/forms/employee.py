@@ -10,7 +10,9 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import SelectDateWidget
 
 from assessment.models import Employee, Desg, Unit, appointment_choices, termination_choices, Section, Year
+from budget_app import settings
 
+EDIT_ENABLED = getattr(settings, "EDIT_ENABLED", False)
 
 class EmployeeListFormHelper(FormHelper):
     form_id = 'customer-search-form'
@@ -191,6 +193,8 @@ class EmpCreateForm(forms.ModelForm):
                   'e_dot', 'e_join', 'e_dob', 'e_gender']
 
     def clean(self):
+        if not EDIT_ENABLED:
+            raise ValidationError("Cannot edit; edit feature locked")
         cleaned_data = super(EmpCreateForm, self).clean()
         if cleaned_data.get("e_unit_roll"):
             e_unit_roll = cleaned_data.get("e_unit_roll").u_code
@@ -284,6 +288,8 @@ class EmpTerminateForm(forms.ModelForm):
         )
 
     def clean(self):
+        if not EDIT_ENABLED:
+            raise ValidationError("Cannot edit; edit feature locked")
         cleaned_data = super(EmpTerminateForm, self).clean()
 
         if cleaned_data.get("e_termi"):
@@ -375,6 +381,8 @@ class EmpAddForm(forms.ModelForm):
         # obj.e_gender=cleaned_data.get('e_gender')
         #
         # obj.save()
+        if not EDIT_ENABLED:
+            raise ValidationError("Cannot edit; edit feature locked")
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
