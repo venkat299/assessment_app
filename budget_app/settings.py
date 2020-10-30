@@ -88,10 +88,18 @@ WSGI_APPLICATION = 'budget_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
+BUDGET_20_21 = 'database/db.sqlite3'
+BUDGET_HCM = 'database/db_hcm_2020.sqlite3'
+BUDGET_EDITED = 'database/db_edited_approved_2020-21.sqlite3'
+
+CURRENT_DATABASE = BUDGET_EDITED
+EDIT_ENABLED = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'database/db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, CURRENT_DATABASE ),
     }
 }
 
@@ -199,4 +207,3 @@ LOGGING = {
     },
 }
 
-EDIT_ENABLED = False
