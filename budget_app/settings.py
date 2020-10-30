@@ -93,7 +93,7 @@ BUDGET_20_21 = 'database/db.sqlite3'
 BUDGET_HCM = 'database/db_hcm_2020.sqlite3'
 BUDGET_EDITED = 'database/db_edited_approved_2020-21.sqlite3'
 
-CURRENT_DATABASE = BUDGET_EDITED
+CURRENT_DATABASE = BUDGET_20_21
 EDIT_ENABLED = True
 
 DATABASES = {

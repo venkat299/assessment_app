@@ -134,6 +134,13 @@ def report_download(request):
 def unit_req(request):
     unit_ls = Unit.objects.values('u_id', 'u_name', 'u_type', 'u_area__a_name')
     context = {'unit_list': unit_ls}
+
+    u_id = request.GET.get('u_id')
+    if u_id:
+        u_obj = Unit.objects.get(u_id = u_id)
+        context["selected_unit"] = u_obj
+
+
     # print(unit_ls)
     return render(request, 'unit_req.html', context)
 
