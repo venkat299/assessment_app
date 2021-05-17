@@ -187,6 +187,10 @@ $(function() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
+                         formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        return "<span  style='color:gray;'>" + value + "</span>";
+                    }
                     //                     color:"green"
                 },
                 {
@@ -195,14 +199,23 @@ $(function() {
                     bottomCalc: "sum",
                     width: 75,
                     align: "right",
-                    formatter: function(cell, formatterParams, onRendered) {
-                        // console.log(cell)
-                        var data = cell.getData()
-                        //                        x=cell
-                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d5.slice(-7) + '">' + cell.getValue() + '</a>'
-                        //                        return cell.getValue().slice(-7);
-                        return url
-                    },
+//                    formatter: function(cell, formatterParams, onRendered) {
+//                        // console.log(cell)
+//                        var data = cell.getData()
+//                        //                        x=cell
+//                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d5.slice(-7) + '">' + cell.getValue() + '</a>'
+//                        //                        return cell.getValue().slice(-7);
+//                        return url
+//                    },
+                formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
+                        var d_cadre = cell.getData().d_cadre
+                        if(d_cadre==='XCD'){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "Ret",
@@ -210,6 +223,7 @@ $(function() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
+                    visible:false
                 },
                 {
                     title: "Req",
@@ -217,7 +231,18 @@ $(function() {
                     width: 75,
                     bottomCalc: "sum",
                     align: "right",
-                    color: "orange"
+                                                            formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().ftot
+
+                        if(d_cadre==='XCD' && tot < value){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='color:orange; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "San",
@@ -225,7 +250,24 @@ $(function() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
-                    color: "green"
+                    color: "green",
+                                         formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().ftot
+                        var san = cell.getData().fsan
+                        var req = cell.getData().freq
+
+                        if((d_cadre==='XCD' && tot < value) ){
+                            return "<span style='color:red; font-weight:bold; border:1'>" + value + "</span>";
+                        }else if (san!==req){
+                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                        else{
+                            return "<span  style=''>" + value + "</span>";
+                        }
+                    }
                 }
             ],
             rowClick: function(e, row) {
@@ -313,6 +355,10 @@ $(function() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
+                    formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        return "<span  style='color:gray;'>" + value + "</span>";
+                    }
                     //                     color:"green"
                 },
                 {
@@ -321,14 +367,24 @@ $(function() {
                     bottomCalc: "sum",
                     width: 75,
                     align: "right",
-                    formatter: function(cell, formatterParams, onRendered) {
-                        // console.log(cell)
-                        var data = cell.getData()
-                        //                        x=cell
-                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d5.slice(-7) + '">' + cell.getValue() + '</a>'
-                        //                        return cell.getValue().slice(-7);
-                        return url
-                    },
+//                    formatter: function(cell, formatterParams, onRendered) {
+//                        // console.log(cell)
+//                        var data = cell.getData()
+//                        //                        x=cell
+//                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d5.slice(-7) + '">' + cell.getValue() + '</a>'
+//                        //                        return cell.getValue().slice(-7);
+//                        return url
+//                    },
+formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        if(d_cadre==='XCD'){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "Ret",
@@ -336,6 +392,7 @@ $(function() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
+                    visible:false
                 },
                 {
                     title: "Req",
@@ -343,7 +400,17 @@ $(function() {
                     width: 75,
                     bottomCalc: "sum",
                     align: "right",
-                    color: "orange"
+                    formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().tot
+                        if(d_cadre==='XCD' && tot < value){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='color:orange; font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "San",
@@ -351,7 +418,24 @@ $(function() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
-                    color: "green"
+//                    color: "green"
+                    formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        var tot = cell.getData().ftot
+                        var san = cell.getData().fsan
+                        var req = cell.getData().freq
+
+                        if((d_cadre==='XCD' && tot < value) ){
+                            return "<span style='color:red; font-weight:bold; border:1'>" + value + "</span>";
+                        }else if (san!==req){
+                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                        else{
+                            return "<span  style=''>" + value + "</span>";
+                        }
+                    }
                 }
             ],
             rowClick: function(e, row) {
@@ -595,39 +679,35 @@ $(function() {
                     align: "right",
                     bottomCalc: "sum",
                     validator: "min:0",
-                    //                    formatter:function(cell, formatterParams){
-                    //                        var value = cell.getValue() ? cell.getValue() : '';
-                    //                        //console.log(cell.getData())
-                    //                        var d_cadre = cell.getData().d_cadre
-                    //                        var tot = cell.getData().tot
-                    //
-                    //                        if(d_cadre==='XCD' && tot < value){
-                    //                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
-                    //                        }else{
-                    //                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
-                    //                        }
-                    //                    }
+                    formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        return "<span  style='color:gray;'>" + value + "</span>";
+                    }
                 },
                 {
                     title: "Ext",
                     field: "tot",
                     align: "right",
                     bottomCalc: "sum",
-                    formatter: function(cell, formatterParams, onRendered) {
-                        // console.log(cell)
-                        var data = cell.getData()
-                        //                        x=cell
-                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id=' + data.u_id.slice(-6) + '&e_desg__d_id=' + data.d_id.slice(-7) + '">' + cell.getValue() + '</a>'
-                        //                        return cell.getValue().slice(-7);
-                        return url
-                    },
+                    editor: "number",
+                    formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        if(d_cadre==='XCD'){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "Ret",
                     field: "retr0",
                     align: "right",
                     bottomCalc: "sum",
-                    validator: "min:0"
+                    validator: "min:0",
+                     visible: false
                 },
                 {
                     title: "Req",
@@ -636,14 +716,14 @@ $(function() {
                     align: "right",
                     bottomCalc: "sum",
                     validator: "min:0",
-                    formatter: function(cell, formatterParams) {
-                        var value = cell.getValue() ? cell.getValue() : '';
+                    formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
                         //console.log(cell.getData())
                         var d_cadre = cell.getData().d_cadre
                         var tot = cell.getData().tot
-                        if (d_cadre === 'XCD' && tot < value) {
+                        if(d_cadre==='XCD' && tot < value){
                             return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
-                        } else {
+                        }else{
                             return "<span style='color:orange; font-weight:bold;'>" + value + "</span>";
                         }
                     }
@@ -655,16 +735,21 @@ $(function() {
                     align: "right",
                     bottomCalc: "sum",
                     validator: "min:0",
-                    formatter: function(cell, formatterParams) {
+                    formatter:function(cell, formatterParams){
                         var value = cell.getValue() ? cell.getValue() : '';
                         //console.log(cell.getData())
                         var d_cadre = cell.getData().d_cadre
                         var tot = cell.getData().tot
+                        var san = cell.getData().san
+                        var req = cell.getData().req
 
-                        if (d_cadre === 'XCD' && tot < value) {
-                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
-                        } else {
+                        if((d_cadre==='XCD' && tot < value) ){
+                            return "<span style='color:red; font-weight:bold; border:1'>" + value + "</span>";
+                        }else if (san!==req){
                             return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                        else{
+                            return "<span  style=''>" + value + "</span>";
                         }
                     }
                 },
@@ -702,8 +787,10 @@ $(function() {
                 var data = cell.getRow().getData()
                 if (data.req === null || data.req === "")
                     data.req = 0
-                if (data.san === null || data.req === "")
+                if (data.san === null || data.san === "")
                     data.san = 0
+                if(data.tot===null || data.tot==="")
+                    data.tot=0
 //                if (data.san >= 0 && data.req >= 0)
 //               data = calculate_promo(data)
 
@@ -791,7 +878,8 @@ $(function() {
                     field: "retr0",
                     align: "right",
                     bottomCalc: "sum",
-                    validator: "min:0"
+                    validator: "min:0",
+                     visible: false,
                 },
                 {
                     title: "Req",
@@ -924,7 +1012,8 @@ $(function() {
                     field: "retr0",
                     align: "right",
                     bottomCalc: "sum",
-                    validator: "min:0"
+                    validator: "min:0",
+                     visible: false,
                 },
                 {
                     title: "Req",
@@ -1001,19 +1090,22 @@ $(function() {
                 //                        $current_row_table1.update({freq:footer_result.req, fsan:footer_result.san})
                 $current_row_table2.update({
                     freq: footer_result.req,
-                    fsan: footer_result.san
+                    fsan: footer_result.san,
+                    ftot: footer_result.tot
                 })
                 var footer_result = ($gdesg_table.getCalcResults()).bottom;
                 //                        var res = {freq:0.req, fsan:footer_result.san}
                 //                      footer_result.keys(obj).forEach( function(key) { })
                 console.log({
                     freq: footer_result.freq,
-                    fsan: footer_result.fsan
+                    fsan: footer_result.fsan,
+                    ftot: footer_result.ftot
                 })
 
                 $current_row_table1.update({
                     freq: footer_result.freq,
-                    fsan: footer_result.fsan
+                    fsan: footer_result.fsan,
+                    ftot: footer_result.ftot
                 })
 
                 var filter_val = $('#sql_filter_val').val()

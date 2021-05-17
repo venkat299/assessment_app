@@ -7,7 +7,7 @@ from django.db import transaction
 from assessment.models import Unit, Desg, Section, Sanction
 
 dscd_column = 'DSCD'
-ext_column = 'TOT'
+ext_column = 'EXT'
 req_column = 'REQ'  # 'TOT REQT 20-21'
 san_column = 'SAN'  # 'SANC 20-21'
 comment_column = 'COMMENTS'  # 'COMMENTS, IF ANY'
@@ -108,7 +108,7 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
     # print("uploading for unit:{0}".format(unit_code))
     try:
         sheet = pe.get_sheet(file_type=extension, file_content=content)
-        sheet.row[0] = ['IDX', 'CADRE', 'DSCD', 'DESIG', 'GRADE', 'TOT', 'REQ', 'SAN', 'COMMENTS']
+        sheet.row[0] = ['IDX', 'CADRE', 'DSCD', 'DESIG', 'GRADE', 'EXT', 'REQ', 'SAN', 'COMMENTS']
         sheet.save_as("./temp/" + u_code + ".xls")
         sheet = pe.get_sheet(file_name=os.path.normpath("./temp/" + u_code + ".xls"), name_columns_by_row=0)
     # sheet = pe.get_sheet(file_type=extension, file_content=content, name_columns_by_row=0,sheet_name=sheet_name)
@@ -141,6 +141,8 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
         response_message.append('correct the above error and upload')
         return 'error', response_message
     else:
+        sum_tot = functools.reduce(sum_acc_tot, filtered_rec, 0)
+        response_message.append("SANC total: {0}".format(sum_tot))
         sum_req = functools.reduce(sum_acc_req, filtered_rec, 0)
         response_message.append("REQT total: {0}".format(sum_req))
         sum_sanc = functools.reduce(sum_acc_sanc, filtered_rec, 0)
@@ -156,18 +158,22 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
 
             req_val = r[req_column]
             san_val = r[san_column]
+            ext_val = r[ext_column]
 
             if req_val == '' or req_val == "" or req_val is None:
                 req_val = 0
             if san_val == '' or san_val == "" or san_val is None:
                 san_val = 0
+            if ext_val == '' or ext_val == "" or ext_val is None:
+                ext_val = 0
             # print(req_val, san_val)
             ls.append(Sanction(sn_id=year + "_" + u_code + "_" + year + "_" + r[dscd_column],
                                sn_unit_id=year + "_" + u_code,
                                sn_dscd_id=year + "_" + r[dscd_column],
                                sn_req=req_val,
                                sn_san=san_val,
-                               sn_comment=r[comment_column]))
+                               sn_comment=r[comment_column],
+                               sn_ext = ext_val))
 
             sn_obj = {'sn_id': year + "_" + u_code + "_" + year + "_" + r[dscd_column],
                       'sn_unit_id': year + "_" + u_code,
@@ -181,6 +187,8 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
             if column_upload == 's+r':
                 sn_obj['sn_req'] = req_val
                 sn_obj['sn_san'] = san_val
+                sn_obj['sn_ext'] = ext_val
+
 
 
             ls_alt.append(sn_obj)

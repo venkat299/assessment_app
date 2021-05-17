@@ -376,11 +376,12 @@ def set_req_unit_desg(request):
     d_id = request.POST['d_id']
     req = request.POST['req']
     san = request.POST['san']
+    ext = request.POST['tot']
     comment = request.POST['comment']
     obj = Sanction(sn_id=u_id + '_' + d_id, sn_unit_id=u_id, sn_dscd_id=d_id, sn_req=req, sn_san=san,
-                   sn_comment=comment)
+                   sn_comment=comment, sn_ext = ext)
     obj.save()
-    print(u_id, d_id, "req=", req, "sanc=", san, comment)
+    print(u_id, d_id, " ext=" ,ext, " req=", req, " sanc=", san, comment)
     result = {'success': True}
     # print(result)
     response = json.dumps(list(result), cls=DjangoJSONEncoder)
@@ -410,7 +411,7 @@ def set_req_unit_sect(request):
     san = request.POST['san']
     comment = request.POST['sns_comment']
     obj = SanctionSection(sns_id=u_id + '_' + sect + '_' + d5, sns_sect_id=sect, sns_unit_id=u_id, sns_d5=d5,
-                          sns_req=req, sns_san=san, sns_comment=comment)
+                          sns_req=req, sns_san=san, sns_comment=comment )
     obj.save()
     # print(u_id, d5)
     result = {'success': True}

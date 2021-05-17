@@ -121,7 +121,11 @@ function create_gdesg_table() {
                     field: "psan",
                     align: "right",
                     width: 75,
-                     bottomCalc: "sum",
+                    bottomCalc: "sum",
+                    formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        return "<span  style='color:gray;'>" + value + "</span>";
+                    }
 //                     color:"green"
                 },
                 {
@@ -130,14 +134,25 @@ function create_gdesg_table() {
                     bottomCalc: "sum",
                      width: 75,
                     align: "right",
-                    formatter:function(cell, formatterParams, onRendered){
-                       // console.log(cell)
-                        var data = cell.getData()
-//                        x=cell
-                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d5.slice(-7)+'"><span style="color:green; font-weight:bold;">'+cell.getValue()+'</span></a>'
-//                        return cell.getValue().slice(-7);
-                        return  url
-                    },
+//                    formatter:function(cell, formatterParams, onRendered){
+//                       // console.log(cell)
+//                        var data = cell.getData()
+////                        x=cell
+//                        var url = '<a class="light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d5.slice(-7)+'"><span style="color:green; font-weight:bold;">'+cell.getValue()+'</span></a>'
+////                        return cell.getValue().slice(-7);
+//                        return  url
+//                    },\
+                formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
+                        console.log('in_gdesg --> ',cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+//                        var tot = cell.getData().ftot
+                        if(d_cadre==='XCD'){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
                 {
                     title: "Ret",
@@ -145,6 +160,7 @@ function create_gdesg_table() {
                     align: "right",
                     width: 75,
                     bottomCalc: "sum",
+                     visible: false
                 },
                 {
                     title: "Req",
@@ -172,16 +188,21 @@ function create_gdesg_table() {
                     width: 75,
                      bottomCalc: "sum",
                      color:"green",
-                                         formatter:function(cell, formatterParams){
+                     formatter:function(cell, formatterParams){
                         var value = cell.getValue() ? cell.getValue() : '';
                         //console.log(cell.getData())
                         var d_cadre = cell.getData().d_cadre
-                        var tot = cell.getData().tot
+                        var tot = cell.getData().ftot
+                        var san = cell.getData().fsan
+                        var req = cell.getData().freq
 
-                        if(d_cadre==='XCD' && tot < value){
-                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
-                        }else{
+                        if((d_cadre==='XCD' && tot < value) ){
+                            return "<span style='color:red; font-weight:bold; border:1'>" + value + "</span>";
+                        }else if (san!==req){
                             return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                        else{
+                            return "<span  style=''>" + value + "</span>";
                         }
                     }
                 }
@@ -334,42 +355,45 @@ function add_d5_entry(value, text, $choice){
                     bottomCalc: "sum",
                     validator:"min:0",
                     width:75,
-//                    formatter:function(cell, formatterParams){
-//                        var value = cell.getValue() ? cell.getValue() : '';
-//                        //console.log(cell.getData())
-//                        var d_cadre = cell.getData().d_cadre
-//                        var tot = cell.getData().tot
-//
-//                        if(d_cadre==='XCD' && tot < value){
-//                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
-//                        }else{
-//                            return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
-//                        }
-//                    }
+                    formatter:function(cell, formatterParams){
+                        var value = cell.getValue() ? cell.getValue() : '';
+                        return "<span  style='color:gray;'>" + value + "</span>";
+                    }
                 },
                 {
                     title: "Ext",
                     field: "tot",
                     align: "right",
                     bottomCalc: "sum",
+                     editor: "number",
                     width:75,
-                    formatter:function(cell, formatterParams, onRendered){
-                       // console.log(cell)
-                        var data = cell.getData()
-//                        x=cell
-                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d_id.slice(-7)+'"><span style="color:green; font-weight:bold;">'+cell.getValue()+'</span></a>'
-//                        return cell.getValue().slice(-7);
-                        return  url
-                    },
+//                    formatter:function(cell, formatterParams, onRendered){
+//                       // console.log(cell)
+//                        var data = cell.getData()
+////                        x=cell
+//                        var url = '<a class=" light_link_column" target="_blank"  href="/assessment/emp/list/?e_unit_roll__u_id='+data.u_id.slice(-6)+'&e_desg__d_id='+data.d_id.slice(-7)+'"><span style="color:green; font-weight:bold;">'+cell.getValue()+'</span></a>'
+////                        return cell.getValue().slice(-7);
+//                        return  url
+//                    },
+                    formatter:function(cell, formatterParams){
+                        var value =  cell.getValue() ? cell.getValue() : '';
+                        //console.log(cell.getData())
+                        var d_cadre = cell.getData().d_cadre
+                        if(d_cadre==='XCD'){
+                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                        }else{
+                            return "<span style='font-weight:bold;'>" + value + "</span>";
+                        }
+                    }
                 },
-                {
-                    title: "Ret",
-                    field: "retr0",
-                    align: "right",
-                    bottomCalc: "sum",
-                    validator:"min:0",
-                    width:75,
-                },
+//                {
+//                    title: "Ret",
+//                    field: "retr0",
+//                    align: "right",
+//                    bottomCalc: "sum",
+//                    validator:"min:0",
+//                    width:75,
+//                },
                 {
                     title: "Req",
                     field: "req",
@@ -403,11 +427,16 @@ function add_d5_entry(value, text, $choice){
                         //console.log(cell.getData())
                         var d_cadre = cell.getData().d_cadre
                         var tot = cell.getData().tot
+                        var san = cell.getData().san
+                        var req = cell.getData().req
 
-                        if(d_cadre==='XCD' && tot < value){
-                            return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
-                        }else{
+                        if((d_cadre==='XCD' && tot < value) ){
+                            return "<span style='color:red; font-weight:bold; border:1'>" + value + "</span>";
+                        }else if (san!==req){
                             return "<span style='color:green; font-weight:bold;'>" + value + "</span>";
+                        }
+                        else{
+                            return "<span  style=''>" + value + "</span>";
                         }
                     }
                 },
@@ -427,9 +456,10 @@ function add_d5_entry(value, text, $choice){
                 var data = cell.getRow().getData()
                 if(data.req===null || data.req==="")
                     data.req=0
-                if(data.san===null || data.req==="")
+                if(data.san===null || data.san==="")
                     data.san=0
-//                if(data.san>=0 && data.req>=0)
+              if(data.tot===null || data.tot==="")
+                    data.tot=0
                 update_sanc_table(data)
              },
         });
@@ -446,7 +476,7 @@ function update_sanc_table(data){
                         console.log("update row : sanction table success")
                         var footer_result = ($desg_table.getCalcResults()).bottom;
                         // console.log(footer_result)
-                        $current_row.update({freq:footer_result.req, fsan:footer_result.san})
+                        $current_row.update({ftot:footer_result.tot,freq:footer_result.req, fsan:footer_result.san})
                     },
                     error:function(){
                         alert("error");

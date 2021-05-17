@@ -185,9 +185,10 @@ class Sanction(models.Model):
     sn_req = models.IntegerField(default=0)
     sn_san = models.IntegerField(default=0)
     sn_comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)
+    sn_ext = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.sn_unit.u_name + '__' + self.sn_dscd.d_code + '__' + str(self.sn_req) + '__' + str(self.sn_san)
+        return self.sn_unit.u_name + '__' + self.sn_dscd.d_code + '__' + str(self.sn_ext) +'__' + str(self.sn_req) + '__' + str(self.sn_san)
 
 
 class PrevSanction(models.Model):
@@ -209,6 +210,7 @@ class SanctionSection(models.Model):
     sns_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     sns_req = models.IntegerField()
     sns_san = models.IntegerField()
+    sns_ext = models.IntegerField()
     sns_comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)
 
     def __str__(self):
