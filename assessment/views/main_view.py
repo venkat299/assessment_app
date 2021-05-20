@@ -204,8 +204,8 @@ def get_req_unit_gdesg(request):
     u_id = request.GET.get('u_id')
     # print(u_id)
     result1 = UnitSancDesg.objects.values('u_id', 'u_name', 'a_order', 'u_type', 'a_name', 'd5', 'd_gdesig', 'd_rank',
-                                          'd_discp').filter(u_id=u_id).order_by(
-        'd5').annotate(ftot=Sum('tot'), fsan=Sum('san'),
+                                          'd_discp', 'gd_rank').filter(u_id=u_id).order_by(
+        'gd_rank').annotate(ftot=Sum('tot'), fsan=Sum('san'),
                        freq=Sum('req'), retr0=Sum('retr0'), psan=Sum('prev_san'))
     # print(result1.query)
     result2 = None

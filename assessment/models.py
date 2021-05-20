@@ -256,6 +256,7 @@ class UnitSancDesg(models.Model):
     retr0 = models.IntegerField()
     prev_req = models.IntegerField()
     prev_san = models.IntegerField()
+    gd_rank = models.IntegerField()
 
     class Meta:
         managed = False
