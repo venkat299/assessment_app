@@ -30,6 +30,7 @@ def funit_dscd_er(self, format, param):
     col_4_pos = (col_3_pos[0] + 50, pos_y_start)
     col_5_pos = (col_4_pos[0] + 50, pos_y_start)
     col_6_pos = (col_5_pos[0] + 50, pos_y_start)
+    col_7_pos = (col_6_pos[0] + 50, pos_y_start)
 
     rpt.pageheader = Band([
 
@@ -39,9 +40,10 @@ def funit_dscd_er(self, format, param):
         Element(col_1_pos, ("Helvetica-Bold", 12), text="Designation"),
         Element(col_2_pos, ("Helvetica-Bold", 12), text="Grade", align="center"),
         Element(col_3_pos, ("Helvetica-Bold", 12), text="Cadre", align="center"),
-        Element(col_4_pos, ("Helvetica-Bold", 12), text="Ext 1.1.2019", align="center", width=50),
-        Element(col_5_pos, ("Helvetica-Bold", 12), text="Req 20-21", align="center", width=50),
-        # Element(col_6_pos, ("Helvetica-Bold", 12), text="Sanc 20-21", align="center",  width=50),
+        Element(col_4_pos, ("Helvetica-Bold", 12), text="Ext", align="center", width=50),
+        Element(col_5_pos, ("Helvetica-Bold", 12), text="Req", align="center", width=50),
+        Element(col_6_pos, ("Helvetica-Bold", 12), text="San", align="center",  width=50),
+        # Element(col_7_pos, ("Helvetica-Bold", 12), text="San", align="center", width=50),
 
         Rule((36, 56), 7.5 * 72, thickness=2),
     ])
@@ -56,20 +58,22 @@ def funit_dscd_er(self, format, param):
         ], getvalue=lambda x: x["d_gdesig"].upper()),
     ]
 
+    comment_band = Band([
+        Element((col_1_pos[0], 0), ("Helvetica", 10), key="comment" , align="left",)])
     rpt.detailband = Band([
         Element((col_1_pos[0], 0), ("Helvetica", 10), getvalue=lambda x: x["d_name"].upper(), ),
         Element((col_2_pos[0], 0), ("Helvetica", 10), key="d_grade", align="left"),
         Element((col_3_pos[0], 0), ("Helvetica", 10), key="d_cadre", align="right"),
         Element((col_4_pos[0], 0), ("Helvetica", 10), getvalue=lambda x: x["tot"] or 0, align="right"),
         Element((col_5_pos[0], 0), ("Helvetica", 10), getvalue=lambda x: x["req"] or 0, align="right"),
-        # Element((col_6_pos[0], 0), ("Helvetica", 10), getvalue=lambda x: x["san"] or 0, align="right"),
-    ])
+        Element((col_6_pos[0], 0), ("Helvetica", 10), getvalue=lambda x: x["san"] or 0, align="right")
+    ]) #, additionalbands=[comment_band]
 
     rpt.groupfooters = [
         Band([
             Rule((col_4_pos[0] - 24, 4), 30),
             Rule((col_5_pos[0] - 24, 4), 30),
-            # Rule((col_6_pos[0]-24, 4), 30),
+            Rule((col_6_pos[0]-24, 4), 30),
 
             Element((col_1_pos[0], 4), ("Helvetica-Bold", 10),
                     getvalue=lambda x: x["d_gdesig"].upper(),
@@ -80,8 +84,8 @@ def funit_dscd_er(self, format, param):
                        key="tot", align="right"),
             SumElement((col_5_pos[0], 4), ("Helvetica-Bold", 10),
                        key="req", align="right"),
-            # SumElement((col_6_pos[0], 4), ("Helvetica-Bold", 10),
-            #            key="san", align="right"),
+            SumElement((col_6_pos[0], 4), ("Helvetica-Bold", 10),
+                       key="san", align="right"),
             Element((36, 16), ("Helvetica-Bold", 10),
                     text=""),
         ],
@@ -92,15 +96,15 @@ def funit_dscd_er(self, format, param):
     rpt.reportfooter = Band([
         Rule((col_4_pos[0] - 24, 4), 30),
         Rule((col_5_pos[0] - 24, 4), 30),
-        # Rule((col_6_pos[0] - 24, 4), 30),
+        Rule((col_6_pos[0] - 24, 4), 30),
 
         Element((240, 4), ("Helvetica-Bold", 10), text="Unit Total"),
         SumElement((col_4_pos[0], 4), ("Helvetica-Bold", 10),
                    key="tot", align="right"),
         SumElement((col_5_pos[0], 4), ("Helvetica-Bold", 10),
                    key="req", align="right"),
-        # SumElement((col_6_pos[0], 4), ("Helvetica-Bold", 10),
-        #            key="san", align="right"),
+        SumElement((col_6_pos[0], 4), ("Helvetica-Bold", 10),
+                   key="san", align="right"),
         Element((36, 16), ("Helvetica-Bold", 10), text=""),
     ])
 
