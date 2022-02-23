@@ -19,6 +19,8 @@ class Area(models.Model):
     a_order = models.IntegerField()
     a_code = models.CharField(max_length=4, default='', null=True)
     a_year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    a_erp_acode = models.CharField(max_length=40, blank=True)
+    # a_erp_adesc = models.CharField(max_length=40, blank=True)
 
     class Meta:
         unique_together = (('a_code', 'a_year'),)
@@ -35,6 +37,9 @@ class Unit(models.Model):
     u_type = models.CharField(max_length=2)
     u_code = models.CharField(max_length=7)
     u_status = models.CharField(max_length=20, null=True)
+    u_erp_ucode = models.CharField(max_length=40, blank=True)
+    # u_erp_udesc = models.CharField(max_length=40, blank=True)
+
 
     # u_year = models.ForeignKey(Year, on_delete=models.CASCADE)
 
@@ -67,6 +72,10 @@ class Desg(models.Model):
     d_discp = models.CharField(verbose_name="Discpline", max_length=20)
     d_promo = models.CharField(max_length=2, null=True)
     d_year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    d_erp_dcode = models.CharField(max_length=40, blank=True)
+    d_erp_gcode = models.CharField(max_length=40, blank= True )
+    # d_erp_ddesc = models.CharField(max_length=40, blank=True)
+    # d_erp_gdesc = models.CharField(max_length=40, blank=True)
 
     class Meta:
         unique_together = (('d_code', 'd_year'),)
@@ -182,6 +191,7 @@ class Sanction(models.Model):
     sn_id = models.CharField(primary_key=True, null=False, max_length=24)
     sn_dscd = models.ForeignKey(Desg, on_delete=models.CASCADE)
     sn_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    sn_ext = models.IntegerField(default=0)
     sn_req = models.IntegerField(default=0)
     sn_san = models.IntegerField(default=0)
     sn_comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)
@@ -195,6 +205,7 @@ class PrevSanction(models.Model):
     ps_id = models.CharField(primary_key=True, null=False, max_length=24)
     ps_dscd = models.ForeignKey(Desg, on_delete=models.CASCADE)
     ps_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    # ps_tot = models.IntegerField(default=0)
     ps_req = models.IntegerField(default=0)
     ps_san = models.IntegerField(default=0)
     ps_comment = models.TextField(verbose_name="Comments", max_length=200, blank=True)

@@ -1,0 +1,31 @@
+SELECT
+	"2021-22" FISCAL_YEAR,
+	"WCL" COMPANY,
+	aa.a_erp_acode erp_AREA_CODE,
+	aa.erp_a_name PERSONNEL_AREA,
+	au.u_erp_ucode erp_Sub_Area_Code,
+	eul.erp_u_name PERSONNEL_SUB_AREA,
+	"" "FUNCTION",
+	ed.erp_d_code JOB_CODE,
+	ed.erp_d_name JOB_NAME,
+	ad.d_erp_gcode GRADE,
+	ag.g_type 	"EMPLOYEE CATEGORY",
+	case when (usd.u_type=='CU') then "SURFACE" else usd.u_type end "WORK C",
+	prev_san "SANCTIONED LAST YEAR 20-21",
+	usd.san "SANCTIONED CURRENT YEAR 21-22"
+from
+	unit_sanc_desg usd
+left join assessment_area aa on
+	usd.acde = aa.a_code
+left join assessment_unit au on 
+	au.u_code = usd.u_code 
+left join erp_unit_list eul on
+	eul.erp_u_code = au.u_erp_ucode 
+left join assessment_desg ad on
+	ad.d_code = usd.d_code 
+left join erp_desg ed on
+	ed.erp_d_code = ad.d_erp_dcode 
+LEFT join assessment_grade ag on
+	ag.g_code = substr(usd.d_code,1,2) 
+where san>0
+	

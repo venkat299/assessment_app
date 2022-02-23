@@ -7,10 +7,11 @@ from django.db import transaction
 from assessment.models import Unit, Desg, Section, Sanction
 
 dscd_column = 'DSCD'
-ext_column = 'EXT'
-req_column = 'REQ'  # 'TOT REQT 20-21'
-san_column = 'SAN'  # 'SANC 20-21'
-comment_column = 'COMMENTS'  # 'COMMENTS, IF ANY'
+ext_column = 'TOTAL EXT'
+req_column = 'TOTAL REQ'
+  # 'TOT REQT 20-21'
+san_column = 'TOTAL SAN'  # 'SANC 20-21'
+comment_column = 'REMARKS'  # 'COMMENTS, IF ANY'
 
 
 def validate_row(row, desg_ls, desg_dup_ls):
@@ -108,7 +109,17 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
     # print("uploading for unit:{0}".format(unit_code))
     try:
         sheet = pe.get_sheet(file_type=extension, file_content=content)
-        sheet.row[0] = ['IDX', 'CADRE', 'DSCD', 'DESIG', 'GRADE', 'EXT', 'REQ', 'SAN', 'COMMENTS']
+        sheet.row[0] = ['IDX','CADRE',
+                        'DSCD',
+                        'DESIGNATION',
+                        'GRADE/ CATEGORY',
+                        'SURFACE EXT',
+                        'UNDERGROUND EXT',
+                        'TOTAL EXT',
+                        'SURFACE REQ',
+                        'UNDERGROUND REQ',
+                        'TOTAL REQ',
+                        'REMARKS']
         sheet.save_as("./temp/" + u_code + ".xls")
         sheet = pe.get_sheet(file_name=os.path.normpath("./temp/" + u_code + ".xls"), name_columns_by_row=0)
     # sheet = pe.get_sheet(file_type=extension, file_content=content, name_columns_by_row=0,sheet_name=sheet_name)
@@ -142,11 +153,13 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
         return 'error', response_message
     else:
         sum_tot = functools.reduce(sum_acc_tot, filtered_rec, 0)
-        response_message.append("SANC total: {0}".format(sum_tot))
-        sum_req = functools.reduce(sum_acc_req, filtered_rec, 0)
-        response_message.append("REQT total: {0}".format(sum_req))
-        sum_sanc = functools.reduce(sum_acc_sanc, filtered_rec, 0)
-        response_message.append("SANC total: {0}".format(sum_sanc))
+        response_message.append("EXT total: {0}".format(sum_tot))
+        if 'r' in column_upload:
+            sum_req = functools.reduce(sum_acc_req, filtered_rec, 0)
+            response_message.append("REQT total: {0}".format(sum_req))
+        if 's' in column_upload:
+            sum_sanc = functools.reduce(sum_acc_sanc, filtered_rec, 0)
+            response_message.append("SANC total: {0}".format(sum_sanc))
 
         response_message.append('{0} rows will be inserted'.format(length))
 
@@ -157,8 +170,12 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
             # sno	AREA	UNIT	MINE_TYPE	ONROLL_UNIT	WORKING UNIT	SECTION_TYPE	CADRE	SECTION	SECTION_CD	DESIG	DSCD	EIS	NAME	GENDER	DOB	Comments
 
             req_val = r[req_column]
-            san_val = r[san_column]
+            san_val = 0
             ext_val = r[ext_column]
+            try:
+                san_val = r[san_column]
+            except KeyError as e:
+                san_val =0
 
             if req_val == '' or req_val == "" or req_val is None:
                 req_val = 0
@@ -182,8 +199,10 @@ def upload_stage_2(content, extension, u_code, year, column_upload):
 
             if column_upload == 'r':
                 sn_obj['sn_req'] = req_val
+                sn_obj['sn_ext'] = ext_val
             if column_upload == 's':
                 sn_obj['sn_san'] = san_val
+                sn_obj['sn_ext'] = ext_val
             if column_upload == 's+r':
                 sn_obj['sn_req'] = req_val
                 sn_obj['sn_san'] = san_val
