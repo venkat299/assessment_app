@@ -1,4 +1,4 @@
-This project is a proof of concept for assessing manpower requirements in Coal India mines, taking into account established standards for various job roles.  It's built using Django and SQLite, providing a web-based interface for managing job roles, standards, and calculating required manpower.
+This project is a proof of concept for assessing manpower requirements in mining project, taking into account established standards for various job roles.  It's built using Django and SQLite, providing a web-based interface for managing job roles, standards, and calculating required manpower.
 
 ## Introduction
 
